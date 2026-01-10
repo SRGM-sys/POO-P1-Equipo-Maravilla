@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar Toma"
+            android:textColor="@color/hydro_text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cantidad (ml):"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/etCantidadAgua"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej: 250"
+            android:inputType="number"
+            android:maxLength="7"
+            android:backgroundTint="@color/hydro_primary"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hora:"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/tvSeleccionarHora"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="-- : --"
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:gravity="center"
+            android:background="#F5F5F5"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnCancelarAgua"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelar"
+                android:backgroundTint="#B0BEC5"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnGuardarAgua"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar"
+                android:backgroundTint="#2E7D32"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,5 +1,6 @@
 package com.example.menuaplication.ui.menu; // Asegúrate de usar tu paquete
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 
 import com.example.menuaplication.R;
+import com.example.menuaplication.ui.hidratacion.ControlHidratacionActivity;
 import com.google.android.material.button.MaterialButton;
 
 /*
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, GestionActividadesActivity.class);
             startActivity(intent);
         });
+        */
 
         // Navegación a Actividad 2: Hidratación
         cardHydration.setOnClickListener(v -> {
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        /*
         // Navegación a Actividad 3: Sostenibilidad
         cardEco.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, RegistroSostenibilidadActivity.class);
@@ -73,8 +77,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, JuegoMemoriaActivity.class);
             startActivity(intent);
         });
-
         */
+
+
 
     // Botón de Salir
         btnExit.setOnClickListener(v -> {

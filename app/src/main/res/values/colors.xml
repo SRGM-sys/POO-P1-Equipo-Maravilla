@@ -6,4 +6,7 @@
     <color name="text_dark">#2C3E50</color>
     <color name="text_secondary">#7F8C8D</color>
     <color name="exit_red">#E57373</color>
+
+    <color name="hydro_background">#E3F2FD</color> <color name="hydro_card_bg">#FFFFFF</color>     <color name="hydro_primary">#1976D2</color>     <color name="hydro_text_primary">#0D47A1</color> <color name="hydro_text_secondary">#546E7A</color>
+    <color name="hydro_list_item_bg">#E1F5FE</color>
 </resources>
