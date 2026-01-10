@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary_blue">#1976D2</color> <color name="primary_green">#388E3C</color> <color name="game_accent">#81C784</color>   <color name="task_accent">#FFC107</color>   <color name="background_light">#F5F7FA</color>
+    <color name="text_dark">#2C3E50</color>
+    <color name="text_secondary">#7F8C8D</color>
+    <color name="exit_red">#E57373</color>
+</resources>
