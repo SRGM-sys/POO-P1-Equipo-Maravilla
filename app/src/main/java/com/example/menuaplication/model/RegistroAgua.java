@@ -1,5 +1,7 @@
 package com.example.menuaplication.model;
 
+// Comentario de prueba
+
 public class RegistroAgua {
     private int cantidadMl;
     private String hora;  // Formato "10:30 AM"
