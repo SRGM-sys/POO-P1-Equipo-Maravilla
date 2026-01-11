@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,7 +31,8 @@ public class TemporizadorActivity extends AppCompatActivity {
     // Vistas
     private TextView tvTiempo, tvFrase, tvModoTitulo;
     private ProgressBar progressBarTimer;
-    private Button btnIniciar, btnPausar, btnFinalizarAhora;
+    private Button btnIniciar, btnPausar, btnFinalizarAhora, btnReiniciar; // Añadido btnReiniciar
+    private ImageButton btnBack; // Añadido btnBack
     private LinearLayout containerOpciones;
 
     // Timer
@@ -62,24 +64,45 @@ public class TemporizadorActivity extends AppCompatActivity {
         actividadActual = (Actividad) getIntent().getSerializableExtra("ACTIVIDAD_OBJ");
         tecnicaActual = (TecnicaEnfoque) getIntent().getSerializableExtra("TECNICA");
 
-        // Vincular
+        // Vincular vistas
         tvTiempo = findViewById(R.id.tvTiempo);
         progressBarTimer = findViewById(R.id.progressBarTimer);
         tvFrase = findViewById(R.id.tvFrase);
         tvModoTitulo = findViewById(R.id.tvModoTitulo);
+        containerOpciones = findViewById(R.id.containerOpciones);
+
+        // Botones
         btnIniciar = findViewById(R.id.btnStart);
         btnPausar = findViewById(R.id.btnPause);
         btnFinalizarAhora = findViewById(R.id.btnFinalizarAhora);
-        containerOpciones = findViewById(R.id.containerOpciones);
+        btnReiniciar = findViewById(R.id.btnReiniciar); // Nuevo
+        btnBack = findViewById(R.id.btnBackTemporizador); // Nuevo
+
+        // 1) BLOQUEO INICIAL: No permitir iniciar si es 0
+        btnIniciar.setEnabled(false);
+        btnIniciar.setAlpha(0.5f); // Visualmente deshabilitado
 
         configurarEstiloPorTecnica();
         generarBotonesDuracion();
 
+        // Listeners
         btnIniciar.setOnClickListener(v -> iniciarTimer());
-        btnPausar.setOnClickListener(v -> pausarTimer());
+
+        // 2) Lógica Pausar/Reanudar en el mismo botón
+        btnPausar.setOnClickListener(v -> togglePausaResume());
+
         btnFinalizarAhora.setOnClickListener(v -> {
             if(timer != null) timer.cancel();
             guardarSesion();
+        });
+
+        // Lógica Reiniciar
+        btnReiniciar.setOnClickListener(v -> reiniciarTimer());
+
+        // 3) Listener botón atrás
+        btnBack.setOnClickListener(v -> {
+            if(timer != null) timer.cancel();
+            finish();
         });
     }
 
@@ -87,61 +110,44 @@ public class TemporizadorActivity extends AppCompatActivity {
         progressBarTimer.setMax(100);
         progressBarTimer.setProgress(0);
 
-        // Estilo del título: Fondo de color, Letras Blancas
         if (tecnicaActual == TecnicaEnfoque.POMODORO) {
             tvModoTitulo.setText("POMODORO");
-            // Fondo Rojo Tomate Intenso
             tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
         } else {
             tvModoTitulo.setText("DEEP WORK");
-            // Fondo Azul Profundo
             tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1A237E")));
         }
-        // Aseguramos letras blancas siempre
         tvModoTitulo.setTextColor(Color.WHITE);
     }
 
     private void generarBotonesDuracion() {
         containerOpciones.removeAllViews();
-
-        // Determinar tiempos según técnica
         int[] minutos = (tecnicaActual == TecnicaEnfoque.POMODORO) ? new int[]{25, 5, 15} : new int[]{45, 60, 90};
 
-        // Parametros de layout para los botones
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                (int) (48 * getResources().getDisplayMetrics().density) // Altura fija cómoda
+                (int) (48 * getResources().getDisplayMetrics().density)
         );
-        params.setMargins(1, 0, 1, 0);
+        params.setMargins(4, 0, 4, 0);
 
-        // --- 1. BOTÓN DE PRUEBA (Recuperado) ---
+        // Botón de prueba 10s
         Button btnTest = new Button(this);
         btnTest.setText("10s");
         btnTest.setLayoutParams(params);
-        btnTest.setBackgroundResource(R.drawable.bg_boton_opcion); // Mismo estilo elegante
+        btnTest.setBackgroundResource(R.drawable.bg_boton_opcion);
         btnTest.setTextColor(Color.parseColor("#455A64"));
         btnTest.setTypeface(null, Typeface.BOLD);
-        btnTest.setPadding(2, 0, 2, 0);
-        btnTest.setMinHeight(0);
-        btnTest.setMinimumHeight(0);
-        // Acción: 10 segundos (10000 ms), cuenta como 1 minuto para registro
         btnTest.setOnClickListener(v -> prepararTimer(10000, 1));
         containerOpciones.addView(btnTest);
 
-        // --- 2. BOTONES NORMALES ---
+        // Botones normales
         for (int min : minutos) {
             Button btn = new Button(this);
             btn.setText(min + "m");
             btn.setLayoutParams(params);
-
-            // Estilo visual
             btn.setBackgroundResource(R.drawable.bg_boton_opcion);
             btn.setTextColor(Color.parseColor("#455A64"));
             btn.setTypeface(null, Typeface.BOLD);
-            btn.setPadding(2, 0, 2, 0);
-            btn.setMinHeight(0);
-            btn.setMinimumHeight(0);
-
             btn.setOnClickListener(v -> prepararTimer(min * 60 * 1000L, min));
             containerOpciones.addView(btn);
         }
@@ -155,22 +161,48 @@ public class TemporizadorActivity extends AppCompatActivity {
         actualizarTextoTimer();
         progressBarTimer.setProgress(0);
 
+        // Habilitar botón Iniciar
+        btnIniciar.setEnabled(true);
+        btnIniciar.setAlpha(1.0f);
         btnIniciar.setVisibility(View.VISIBLE);
+
+        // Ocultar controles de sesión activa
         btnPausar.setVisibility(View.GONE);
         btnFinalizarAhora.setVisibility(View.GONE);
+        btnReiniciar.setVisibility(View.GONE);
+        containerOpciones.setVisibility(View.VISIBLE);
 
         tvFrase.setText("Listo: " + minutosReales + " min de enfoque.");
         tvFrase.setTextColor(Color.parseColor("#78909C"));
 
         if (timer != null) timer.cancel();
+        timerCorriendo = false;
     }
 
     private void iniciarTimer() {
+        // Frase aleatoria
         Random random = new Random();
         String frase = frasesMotivadoras[random.nextInt(frasesMotivadoras.length)];
         tvFrase.setText(frase);
         tvFrase.setTextColor(Color.parseColor("#263238"));
 
+        // Ocultar botón Iniciar y opciones
+        btnIniciar.setVisibility(View.GONE);
+        containerOpciones.setVisibility(View.INVISIBLE);
+
+        // Mostrar botones de control
+        btnPausar.setVisibility(View.VISIBLE);
+        btnPausar.setText("PAUSAR"); // Estado inicial
+        btnPausar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFB300")));
+
+        btnFinalizarAhora.setVisibility(View.VISIBLE);
+        btnReiniciar.setVisibility(View.VISIBLE);
+
+        crearYArrancarCountDown();
+    }
+
+    // Método auxiliar para crear el timer (evita código duplicado)
+    private void crearYArrancarCountDown() {
         timer = new CountDownTimer(tiempoRestanteMillis, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -185,29 +217,39 @@ public class TemporizadorActivity extends AppCompatActivity {
                 progressBarTimer.setProgress(100);
                 tvTiempo.setText("00:00");
                 tvFrase.setText("¡Sesión completada!");
+                btnPausar.setVisibility(View.GONE); // Ocultar pausar al terminar
                 guardarSesion();
             }
         }.start();
-
         timerCorriendo = true;
-
-        btnIniciar.setVisibility(View.GONE);
-        containerOpciones.setVisibility(View.INVISIBLE); // Ocultar opciones
-
-        btnPausar.setVisibility(View.VISIBLE);
-        btnPausar.setEnabled(true);
-        btnFinalizarAhora.setVisibility(View.VISIBLE);
     }
 
-    private void pausarTimer() {
+    private void togglePausaResume() {
+        if (timerCorriendo) {
+            // PAUSAR
+            if(timer != null) timer.cancel();
+            timerCorriendo = false;
+
+            btnPausar.setText("REANUDAR");
+            btnPausar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50"))); // Verde para reanudar
+            tvFrase.setText("Tiempo pausado");
+        } else {
+            // REANUDAR
+            crearYArrancarCountDown();
+
+            btnPausar.setText("PAUSAR");
+            btnPausar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFB300"))); // Amarillo para pausar
+            tvFrase.setText("¡Sigue así!");
+        }
+    }
+
+    private void reiniciarTimer() {
         if(timer != null) timer.cancel();
         timerCorriendo = false;
 
-        btnIniciar.setVisibility(View.VISIBLE);
-        btnIniciar.setText("Reanudar");
-        btnPausar.setVisibility(View.GONE);
-
-        tvFrase.setText("Tiempo pausado");
+        // Volver al estado "preparado"
+        prepararTimer(tiempoTotalInicialMillis, duracionTotalMinutos);
+        tvFrase.setText("Reiniciado. Pulsa Iniciar.");
     }
 
     private void actualizarTextoTimer() {

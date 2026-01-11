@@ -8,6 +8,17 @@
     android:background="#FAFAFA"
     android:padding="24dp">
 
+    <ImageButton
+        android:id="@+id/btnBackTemporizador"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_revert"
+        android:contentDescription="Volver"
+        app:tint="#455A64"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tvModoTitulo"
         android:layout_width="wrap_content"
@@ -83,7 +94,7 @@
 
     <LinearLayout
         android:id="@+id/layoutControles"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:gravity="center"
@@ -96,7 +107,6 @@
             android:id="@+id/btnStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:backgroundTint="#4CAF50"
             android:text="INICIAR"
             android:elevation="4dp"
@@ -106,15 +116,29 @@
             android:textStyle="bold" />
 
         <Button
+            android:id="@+id/btnReiniciar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#2196F3"
+            android:text="REINICIAR"
+            android:elevation="4dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <Button
             android:id="@+id/btnPause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:backgroundTint="#FFB300"
             android:text="PAUSAR"
             android:elevation="4dp"
             android:letterSpacing="0.1"
-            android:paddingHorizontal="32dp"
+            android:paddingHorizontal="24dp"
             android:paddingVertical="14dp"
             android:textStyle="bold"
             android:visibility="gone"
@@ -127,10 +151,11 @@
             android:backgroundTint="#EF5350"
             android:text="FIN"
             android:elevation="0dp"
-            android:paddingHorizontal="20dp"
+            android:paddingHorizontal="16dp"
             android:paddingVertical="14dp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
