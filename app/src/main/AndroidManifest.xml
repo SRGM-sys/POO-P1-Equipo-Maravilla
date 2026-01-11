@@ -26,6 +26,10 @@
         <activity
             android:name=".ui.menu.MainActivity"
             android:exported="false"></activity>
+        <activity android:name=".ui.ListaActividadesActivity" />
+        <activity android:name=".ui.CrearActividadActivity" />
+        <activity android:name=".ui.DetalleActividadActivity" />
+        <activity android:name=".ui.TemporizadorActivity" />
     </application>
 
 </manifest>
