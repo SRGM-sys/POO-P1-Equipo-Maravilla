@@ -1,4 +1,4 @@
-package com.example.menuaplication.model;
+package com.example.menuaplication.model.hidratacion;
 
 // Comentario de prueba
 // Otro comentario de prueba

@@ -23,7 +23,7 @@
         android:id="@+id/tvModoTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:text="Modo Enfoque"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
@@ -37,6 +37,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tvNombreActividadTimer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Nombre de la Actividad"
+        android:textColor="#546E7A"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvModoTitulo"
+        app:layout_constraintBottom_toTopOf="@+id/progressBarTimer" />
+
     <ProgressBar
         android:id="@+id/progressBarTimer"
         style="?android:attr/progressBarStyleHorizontal"
@@ -49,7 +64,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tvFrase"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvModoTitulo"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreActividadTimer"
         app:layout_constraintVertical_bias="0.4" />
 
     <TextView

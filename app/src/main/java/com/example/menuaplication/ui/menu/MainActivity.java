@@ -10,7 +10,7 @@ import androidx.cardview.widget.CardView;
 
 import com.example.menuaplication.R;
 // TU IMPORTACIÓN IMPORTANTE
-import com.example.menuaplication.ui.ListaActividadesActivity;
+import com.example.menuaplication.ui.actividades.ListaActividadesActivity;
 import com.example.menuaplication.ui.hidratacion.ControlHidratacionActivity;
 import com.google.android.material.button.MaterialButton;
 
