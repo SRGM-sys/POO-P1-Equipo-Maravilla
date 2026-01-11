@@ -1,6 +1,7 @@
 package com.example.menuaplication.model;
 
 // Comentario de prueba
+// Otro comentario de prueba
 
 public class RegistroAgua {
     private int cantidadMl;
