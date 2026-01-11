@@ -1,6 +1,5 @@
 package com.example.menuaplication.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -21,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menuaplication.R;
@@ -35,11 +35,14 @@ import java.time.format.DateTimeFormatter;
 
 public class DetalleActividadActivity extends AppCompatActivity {
 
+    // Constante para identificar la petición de editar
+    private static final int REQUEST_CODE_EDITAR = 1001;
+
     private Actividad actividad;
     private TextView tvTitulo, tvDesc, tvDetalleExtra, tvAvance, tvId, tvTiempoEst, tvTiempoInv;
     private ProgressBar pbAvance;
     private LinearLayout layoutHistorialContainer;
-    private Button btnPomodoro, btnDeepWork, btnAvance, btnEliminar;
+    private Button btnPomodoro, btnDeepWork, btnAvance, btnEliminar, btnEditar; // Añadido btnEditar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,9 @@ public class DetalleActividadActivity extends AppCompatActivity {
         btnAvance = findViewById(R.id.btnRegistrarAvance);
         btnEliminar = findViewById(R.id.btnEliminar);
 
+        // VINCULACIÓN DEL NUEVO BOTÓN
+        btnEditar = findViewById(R.id.btnEditarActividad);
+
         // Configurar botón volver
         ImageButton btnBack = findViewById(R.id.btnBackDetalle);
         if(btnBack != null) {
@@ -80,11 +86,41 @@ public class DetalleActividadActivity extends AppCompatActivity {
         // Ahora estos métodos abren los Dialogs personalizados
         btnAvance.setOnClickListener(v -> mostrarDialogoAvance());
         btnEliminar.setOnClickListener(v -> mostrarDialogoEliminar());
+
+        // LÓGICA BOTÓN EDITAR (NUEVO)
+        btnEditar.setOnClickListener(v -> {
+            Intent intent = new Intent(DetalleActividadActivity.this, EditarActividadActivity.class);
+            intent.putExtra("actividad_a_editar", actividad); // Enviamos la actividad actual
+            startActivityForResult(intent, REQUEST_CODE_EDITAR); // Iniciamos esperando respuesta
+        });
+    }
+
+    // MÉTODO PARA CAPTURAR LOS CAMBIOS AL VOLVER DE EDITAR (NUEVO)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_EDITAR && resultCode == RESULT_OK && data != null) {
+            // Recuperar la actividad modificada del Intent de respuesta
+            Actividad actividadModificada = (Actividad) data.getSerializableExtra("actividad_actualizada");
+            if (actividadModificada != null) {
+                this.actividad = actividadModificada;
+                cargarDatos(); // Actualizar la UI con los nuevos datos (nombre, desc, fecha, etc.)
+                Toast.makeText(this, "Actividad actualizada", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        // Recargar datos por si volvimos del Temporizador (que guarda cambios en disco)
+        // Buscamos la versión más reciente en el repositorio por si acaso
+        for (Actividad a : Repositorio.getInstance().getActividades()) {
+            if (a.getId() == actividad.getId()) {
+                this.actividad = a;
+                break;
+            }
+        }
         cargarDatos();
     }
 
@@ -131,12 +167,14 @@ public class DetalleActividadActivity extends AppCompatActivity {
             ActividadAcademica ac = (ActividadAcademica) actividad;
             String info = "Materia: " + ac.getAsignatura() + "\n" +
                     "Tipo: " + ac.getTipo() + "\n" +
-                    "Prioridad: " + ac.getPrioridad();
+                    "Prioridad: " + ac.getPrioridad() + "\n" +
+                    "Vence: " + ac.getFechaVencimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             tvDetalleExtra.setText(info);
         } else if (actividad instanceof ActividadPersonal) {
             ActividadPersonal ap = (ActividadPersonal) actividad;
             String info = "Lugar: " + ap.getLugar() + "\n" +
-                    "Prioridad: " + ap.getPrioridad();
+                    "Prioridad: " + ap.getPrioridad() + "\n" +
+                    "Vence: " + ap.getFechaVencimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             tvDetalleExtra.setText(info);
         }
 

@@ -16,11 +16,28 @@ public class SesionEnfoque implements Serializable {
         this.completada = completada;
     }
 
-    // Getters and Setters
+    // --- Getters ---
     public LocalDateTime getFechaHora() { return fechaHora; }
     public int getDuracionMinutos() { return duracionMinutos; }
     public TecnicaEnfoque getTecnica() { return tecnica; }
     public boolean isCompletada() { return completada; }
+
+    // --- Setters (Nuevos) ---
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public void setDuracionMinutos(int duracionMinutos) {
+        this.duracionMinutos = duracionMinutos;
+    }
+
+    public void setTecnica(TecnicaEnfoque tecnica) {
+        this.tecnica = tecnica;
+    }
+
+    public void setCompletada(boolean completada) {
+        this.completada = completada;
+    }
 
     @Override
     public String toString() {

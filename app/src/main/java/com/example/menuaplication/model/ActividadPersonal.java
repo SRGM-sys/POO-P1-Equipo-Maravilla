@@ -10,7 +10,13 @@ public class ActividadPersonal extends Actividad {
         this.lugar = lugar;
     }
 
+    // --- Getters ---
     public String getLugar() { return lugar; }
+
+    // --- Setters (Nuevos para la edición) ---
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
 
     @Override
     public String getTipoEtiqueta() {

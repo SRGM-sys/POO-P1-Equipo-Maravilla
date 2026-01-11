@@ -12,8 +12,18 @@ public class ActividadAcademica extends Actividad {
         this.tipo = tipo;
     }
 
+    // --- Getters ---
     public String getAsignatura() { return asignatura; }
     public TipoAcademica getTipo() { return tipo; }
+
+    // --- Setters (Nuevos para la edición) ---
+    public void setAsignatura(String asignatura) {
+        this.asignatura = asignatura;
+    }
+
+    public void setTipo(TipoAcademica tipo) {
+        this.tipo = tipo;
+    }
 
     @Override
     public String getTipoEtiqueta() {

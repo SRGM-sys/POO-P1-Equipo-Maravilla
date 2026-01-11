@@ -45,20 +45,46 @@ public abstract class Actividad implements Serializable {
         return total;
     }
 
+    // --- Getters ---
     public int getId() { return id; }
     public String getNombre() { return nombre; }
     public LocalDateTime getFechaVencimiento() { return fechaVencimiento; }
     public Prioridad getPrioridad() { return prioridad; }
     public double getPorcentajeAvance() { return porcentajeAvance; }
+    public String getDescripcion() { return descripcion; }
+    public int getTiempoEstimadoMinutos() { return tiempoEstimadoMinutos; }
+    public ArrayList<SesionEnfoque> getHistorialSesiones() { return historialSesiones; }
+    public EstadoActividad getEstado() { return estado; } // Agregado por si acaso se necesita leer el estado directamente
+
+    // --- Setters (Nuevos para la edición) ---
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setFechaVencimiento(LocalDateTime fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public void setPrioridad(Prioridad prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public void setTiempoEstimadoMinutos(int tiempoEstimadoMinutos) {
+        this.tiempoEstimadoMinutos = tiempoEstimadoMinutos;
+    }
+
     public void setPorcentajeAvance(double porcentajeAvance) {
         this.porcentajeAvance = porcentajeAvance;
         if(porcentajeAvance >= 100) this.estado = EstadoActividad.COMPLETADA;
         else if(porcentajeAvance > 0) this.estado = EstadoActividad.EN_PROGRESO;
         else this.estado = EstadoActividad.PENDIENTE;
     }
-    public String getDescripcion() { return descripcion; }
-    public int getTiempoEstimadoMinutos() { return tiempoEstimadoMinutos; }
-    public ArrayList<SesionEnfoque> getHistorialSesiones() { return historialSesiones; }
-
+    public static void setContadorIds(int ultimoId) {
+        contadorIds = ultimoId;
+    }
     public abstract String getTipoEtiqueta();
 }
