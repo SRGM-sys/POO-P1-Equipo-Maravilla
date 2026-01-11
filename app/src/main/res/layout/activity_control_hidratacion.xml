@@ -57,8 +57,7 @@
                     android:padding="12dp"
                     android:text="19/01/2026"
                     android:textColor="@color/black"
-                    android:drawableEnd="@drawable/ic_task"
-                    app:drawableTint="@color/black"/>
+                    android:drawableEnd="@drawable/ic_task"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
