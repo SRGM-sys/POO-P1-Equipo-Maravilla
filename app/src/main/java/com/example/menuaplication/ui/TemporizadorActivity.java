@@ -1,6 +1,9 @@
 package com.example.menuaplication.ui;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -10,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menuaplication.R;
@@ -21,60 +23,82 @@ import com.example.menuaplication.model.TecnicaEnfoque;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
+import java.util.Random;
 
 public class TemporizadorActivity extends AppCompatActivity {
 
     // Vistas
-    private TextView tvTiempo, tvEstado, tvModoTitulo;
-    private ProgressBar progressBarTimer; // NUEVO: Barra circular
+    private TextView tvTiempo, tvFrase, tvModoTitulo;
+    private ProgressBar progressBarTimer;
     private Button btnIniciar, btnPausar, btnFinalizarAhora;
     private LinearLayout containerOpciones;
 
-    // Variables del Timer
+    // Timer
     private CountDownTimer timer;
     private long tiempoRestanteMillis;
-    private long tiempoTotalInicialMillis; // NUEVO: Para calcular el porcentaje de la barra
+    private long tiempoTotalInicialMillis;
     private boolean timerCorriendo = false;
 
-    // Datos de negocio
+    // Datos
     private Actividad actividadActual;
     private TecnicaEnfoque tecnicaActual;
     private int duracionTotalMinutos;
+
+    private final String[] frasesMotivadoras = {
+            "¡Tú puedes con esto!",
+            "Concéntrate en el ahora.",
+            "Un paso a la vez.",
+            "El éxito es la suma de pequeños esfuerzos.",
+            "Hazlo con pasión.",
+            "Mantén la calma y sigue.",
+            "Tu mente es poderosa."
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temporizador);
 
-        // Recuperar datos del Intent
         actividadActual = (Actividad) getIntent().getSerializableExtra("ACTIVIDAD_OBJ");
         tecnicaActual = (TecnicaEnfoque) getIntent().getSerializableExtra("TECNICA");
 
-        // Vincular vistas
+        // Vincular
         tvTiempo = findViewById(R.id.tvTiempo);
-        progressBarTimer = findViewById(R.id.progressBarTimer); // Vincular barra
-        tvEstado = findViewById(R.id.tvEstado);
+        progressBarTimer = findViewById(R.id.progressBarTimer);
+        tvFrase = findViewById(R.id.tvFrase);
         tvModoTitulo = findViewById(R.id.tvModoTitulo);
         btnIniciar = findViewById(R.id.btnStart);
         btnPausar = findViewById(R.id.btnPause);
         btnFinalizarAhora = findViewById(R.id.btnFinalizarAhora);
         containerOpciones = findViewById(R.id.containerOpciones);
 
-        // Configuración inicial
-        tvModoTitulo.setText(tecnicaActual == TecnicaEnfoque.POMODORO ? "Pomodoro" : "Deep Work");
-        progressBarTimer.setMax(100);
-        progressBarTimer.setProgress(0);
-
+        configurarEstiloPorTecnica();
         generarBotonesDuracion();
 
-        // Listeners
         btnIniciar.setOnClickListener(v -> iniciarTimer());
         btnPausar.setOnClickListener(v -> pausarTimer());
-
         btnFinalizarAhora.setOnClickListener(v -> {
             if(timer != null) timer.cancel();
             guardarSesion();
         });
+    }
+
+    private void configurarEstiloPorTecnica() {
+        progressBarTimer.setMax(100);
+        progressBarTimer.setProgress(0);
+
+        // Estilo del título: Fondo de color, Letras Blancas
+        if (tecnicaActual == TecnicaEnfoque.POMODORO) {
+            tvModoTitulo.setText("POMODORO");
+            // Fondo Rojo Tomate Intenso
+            tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
+        } else {
+            tvModoTitulo.setText("DEEP WORK");
+            // Fondo Azul Profundo
+            tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1A237E")));
+        }
+        // Aseguramos letras blancas siempre
+        tvModoTitulo.setTextColor(Color.WHITE);
     }
 
     private void generarBotonesDuracion() {
@@ -83,17 +107,41 @@ public class TemporizadorActivity extends AppCompatActivity {
         // Determinar tiempos según técnica
         int[] minutos = (tecnicaActual == TecnicaEnfoque.POMODORO) ? new int[]{25, 5, 15} : new int[]{45, 60, 90};
 
-        // Botón Test (10 segundos) - Útil para probar la barra
+        // Parametros de layout para los botones
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                (int) (48 * getResources().getDisplayMetrics().density) // Altura fija cómoda
+        );
+        params.setMargins(1, 0, 1, 0);
+
+        // --- 1. BOTÓN DE PRUEBA (Recuperado) ---
         Button btnTest = new Button(this);
-        btnTest.setText("Test 10s");
-        btnTest.setOnClickListener(v -> prepararTimer(10 * 1000, 1));
+        btnTest.setText("10s");
+        btnTest.setLayoutParams(params);
+        btnTest.setBackgroundResource(R.drawable.bg_boton_opcion); // Mismo estilo elegante
+        btnTest.setTextColor(Color.parseColor("#455A64"));
+        btnTest.setTypeface(null, Typeface.BOLD);
+        btnTest.setPadding(2, 0, 2, 0);
+        btnTest.setMinHeight(0);
+        btnTest.setMinimumHeight(0);
+        // Acción: 10 segundos (10000 ms), cuenta como 1 minuto para registro
+        btnTest.setOnClickListener(v -> prepararTimer(10000, 1));
         containerOpciones.addView(btnTest);
 
-        // Botones reales
+        // --- 2. BOTONES NORMALES ---
         for (int min : minutos) {
             Button btn = new Button(this);
             btn.setText(min + "m");
-            // Se le pasa milisegundos y los minutos "nominales" para el registro
+            btn.setLayoutParams(params);
+
+            // Estilo visual
+            btn.setBackgroundResource(R.drawable.bg_boton_opcion);
+            btn.setTextColor(Color.parseColor("#455A64"));
+            btn.setTypeface(null, Typeface.BOLD);
+            btn.setPadding(2, 0, 2, 0);
+            btn.setMinHeight(0);
+            btn.setMinimumHeight(0);
+
             btn.setOnClickListener(v -> prepararTimer(min * 60 * 1000L, min));
             containerOpciones.addView(btn);
         }
@@ -101,29 +149,32 @@ public class TemporizadorActivity extends AppCompatActivity {
 
     private void prepararTimer(long millis, int minutosReales) {
         tiempoRestanteMillis = millis;
-        tiempoTotalInicialMillis = millis; // Guardamos el total para calcular porcentaje
+        tiempoTotalInicialMillis = millis;
         duracionTotalMinutos = minutosReales;
 
         actualizarTextoTimer();
-        progressBarTimer.setProgress(0); // Reiniciar barra
+        progressBarTimer.setProgress(0);
 
-        btnIniciar.setEnabled(true);
-        btnPausar.setEnabled(false);
-        tvEstado.setText("Listo: " + minutosReales + " min");
-        btnFinalizarAhora.setVisibility(View.INVISIBLE);
+        btnIniciar.setVisibility(View.VISIBLE);
+        btnPausar.setVisibility(View.GONE);
+        btnFinalizarAhora.setVisibility(View.GONE);
 
-        // Si estaba corriendo otro, lo cancelamos
+        tvFrase.setText("Listo: " + minutosReales + " min de enfoque.");
+        tvFrase.setTextColor(Color.parseColor("#78909C"));
+
         if (timer != null) timer.cancel();
     }
 
     private void iniciarTimer() {
-        // Usamos un intervalo de 100ms (en lugar de 1000) para que la barra se mueva suave
+        Random random = new Random();
+        String frase = frasesMotivadoras[random.nextInt(frasesMotivadoras.length)];
+        tvFrase.setText(frase);
+        tvFrase.setTextColor(Color.parseColor("#263238"));
+
         timer = new CountDownTimer(tiempoRestanteMillis, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
                 tiempoRestanteMillis = millisUntilFinished;
-
-                // Actualizar texto y barra
                 actualizarTextoTimer();
                 actualizarBarraCircular();
             }
@@ -133,28 +184,33 @@ public class TemporizadorActivity extends AppCompatActivity {
                 timerCorriendo = false;
                 progressBarTimer.setProgress(100);
                 tvTiempo.setText("00:00");
+                tvFrase.setText("¡Sesión completada!");
                 guardarSesion();
             }
         }.start();
 
         timerCorriendo = true;
-        btnIniciar.setEnabled(false);
+
+        btnIniciar.setVisibility(View.GONE);
+        containerOpciones.setVisibility(View.INVISIBLE); // Ocultar opciones
+
+        btnPausar.setVisibility(View.VISIBLE);
         btnPausar.setEnabled(true);
-        containerOpciones.setVisibility(View.GONE);
         btnFinalizarAhora.setVisibility(View.VISIBLE);
-        tvEstado.setText("Enfócate...");
     }
 
     private void pausarTimer() {
         if(timer != null) timer.cancel();
         timerCorriendo = false;
-        btnIniciar.setEnabled(true);
-        btnPausar.setEnabled(false);
-        tvEstado.setText("Pausado");
+
+        btnIniciar.setVisibility(View.VISIBLE);
+        btnIniciar.setText("Reanudar");
+        btnPausar.setVisibility(View.GONE);
+
+        tvFrase.setText("Tiempo pausado");
     }
 
     private void actualizarTextoTimer() {
-        // Redondeo hacia arriba para que no muestre 00:00 antes de tiempo
         int totalSeconds = (int) Math.ceil(tiempoRestanteMillis / 1000.0);
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
@@ -162,12 +218,9 @@ public class TemporizadorActivity extends AppCompatActivity {
     }
 
     private void actualizarBarraCircular() {
-        // Lógica visual: Se llena a medida que pasa el tiempo
         if (tiempoTotalInicialMillis > 0) {
             long tiempoPasado = tiempoTotalInicialMillis - tiempoRestanteMillis;
             int progreso = (int) (((float) tiempoPasado / tiempoTotalInicialMillis) * 100);
-
-            // Animación suave (API 24+)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 progressBarTimer.setProgress(progreso, true);
             } else {
@@ -177,14 +230,10 @@ public class TemporizadorActivity extends AppCompatActivity {
     }
 
     private void guardarSesion() {
-        tvEstado.setText("Guardando...");
-
-        // 1. Agregar Sesión al Historial (TU LÓGICA ORIGINAL)
         if (actividadActual != null) {
             SesionEnfoque nuevaSesion = new SesionEnfoque(LocalDateTime.now(), duracionTotalMinutos, tecnicaActual, true);
             actividadActual.agregarSesion(nuevaSesion);
 
-            // 2. CÁLCULO AUTOMÁTICO DE AVANCE (TU LÓGICA ORIGINAL)
             int minutosInvertidos = actividadActual.getMinutosInvertidos();
             int minutosEstimados = actividadActual.getTiempoEstimadoMinutos();
 
@@ -194,18 +243,12 @@ public class TemporizadorActivity extends AppCompatActivity {
                 actividadActual.setPorcentajeAvance(nuevoPorcentaje);
             }
 
-            // 3. Actualizar en Repositorio
             Repositorio.getInstance().actualizarActividad(actividadActual);
+            Toast.makeText(this, "¡Excelente! Guardado.", Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(this, "Sesión guardada. Avance: " + (int)actividadActual.getPorcentajeAvance() + "%", Toast.LENGTH_LONG).show();
-
-            // Volver a la Lista para refrescar
             Intent intent = new Intent(this, ListaActividadesActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
-        } else {
-            Toast.makeText(this, "Error: Actividad no encontrada", Toast.LENGTH_SHORT).show();
             finish();
         }
     }

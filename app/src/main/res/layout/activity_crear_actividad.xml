@@ -22,9 +22,9 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Volver"
                 android:src="@android:drawable/ic_menu_revert"
-                app:tint="#333"
-                android:contentDescription="Volver" />
+                app:tint="#333" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,121 +45,130 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="534dp"
                 android:orientation="vertical"
                 android:padding="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Tipo de Actividad"
-                    android:textStyle="bold"
+                    android:textAllCaps="true"
                     android:textColor="#5F6368"
                     android:textSize="12sp"
-                    android:textAllCaps="true"
-                    android:layout_marginBottom="8dp"/>
+                    android:textStyle="bold" />
 
                 <RadioGroup
                     android:id="@+id/rgTipo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    android:orientation="horizontal">
+
                     <RadioButton
                         android:id="@+id/rbAcademica"
-                        android:layout_width="wrap_content"
+                        android:layout_width="142dp"
                         android:layout_height="wrap_content"
-                        android:text="Académica"
-                        android:checked="true"
+                        android:layout_marginEnd="24dp"
                         android:buttonTint="#2196F3"
-                        android:layout_marginEnd="24dp"/>
+                        android:checked="true"
+                        android:text="Académica" />
+
                     <RadioButton
                         android:id="@+id/rbPersonal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="169dp"
                         android:layout_height="wrap_content"
                         android:buttonTint="#E91E63"
-                        android:text="Personal"/>
+                        android:text="Personal" />
                 </RadioGroup>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nombre de la actividad"
                     android:layout_marginBottom="12dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:hint="Nombre de la actividad">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombre"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="53dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descripción"
                     android:layout_marginBottom="12dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:hint="Descripción">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDesc"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="53dp"
                         android:inputType="textMultiLine"
-                        android:minLines="2"/>
+                        android:minLines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Fecha de Vencimiento"
-                    android:layout_marginBottom="12dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:endIconMode="custom"
-                    app:endIconDrawable="@android:drawable/ic_menu_my_calendar"> <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etFechaVencimiento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:inputType="none"/>
+                    android:layout_marginBottom="12dp"
+                    android:hint="Fecha de Vencimiento"
+                    app:endIconDrawable="@android:drawable/ic_menu_my_calendar"
+                    app:endIconMode="custom">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFechaVencimiento"
+                        android:layout_width="match_parent"
+                        android:layout_height="53dp"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:baselineAligned="false"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:hint="Minutos"
                         android:layout_marginEnd="8dp"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        android:layout_weight="1"
+                        android:hint="Minutos">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etMinutos"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"/>
+                            android:layout_height="53dp"
+                            android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Prioridad"
-                            android:textSize="12sp"
                             android:layout_marginStart="4dp"
-                            android:textColor="#5F6368"/>
+                            android:text="Prioridad"
+                            android:textColor="#5F6368"
+                            android:textSize="12sp" />
+
                         <Spinner
                             android:id="@+id/spinnerPrioridad"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"/>
+                            android:layout_height="40dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -171,27 +180,29 @@
                     android:visibility="visible">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Materia / Asignatura"
                         android:layout_marginBottom="12dp"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        android:hint="Materia / Asignatura">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAsignatura"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="53dp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tipo de Entrega"
-                        android:textSize="12sp"
-                        android:textColor="#5F6368"/>
+                        android:textColor="#5F6368"
+                        android:textSize="12sp" />
+
                     <Spinner
                         android:id="@+id/spinnerTipoAcademica"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"/>
+                        android:layout_height="40dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -200,15 +211,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:visibility="gone">
+
                     <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Lugar"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        android:hint="Lugar">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etLugar"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
