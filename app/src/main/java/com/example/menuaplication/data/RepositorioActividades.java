@@ -81,7 +81,7 @@ public class RepositorioActividades {
         }
     }
 
-    // Método auxiliar para sincronizar el contador de IDs
+    // Método auxiliar para sincronizar el contador de IDs 1
     private void actualizarContadorDeIds() {
         int maxId = 0;
         if (listaActividades != null) {
