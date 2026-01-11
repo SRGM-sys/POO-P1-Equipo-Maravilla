@@ -1,13 +1,17 @@
 package com.example.menuaplication.ui;
 
-import android.app.AlertDialog;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,7 +38,6 @@ public class DetalleActividadActivity extends AppCompatActivity {
     private Actividad actividad;
     private TextView tvTitulo, tvDesc, tvDetalleExtra, tvAvance, tvId, tvTiempoEst, tvTiempoInv;
     private ProgressBar pbAvance;
-    // Usamos un LinearLayout dentro del ScrollView para el historial
     private LinearLayout layoutHistorialContainer;
     private Button btnPomodoro, btnDeepWork, btnAvance, btnEliminar;
 
@@ -62,7 +65,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
         btnAvance = findViewById(R.id.btnRegistrarAvance);
         btnEliminar = findViewById(R.id.btnEliminar);
 
-        // Configurar botón volver (flecha)
+        // Configurar botón volver
         ImageButton btnBack = findViewById(R.id.btnBackDetalle);
         if(btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
@@ -73,6 +76,8 @@ public class DetalleActividadActivity extends AppCompatActivity {
         // Listeners
         btnPomodoro.setOnClickListener(v -> irATemporizador(TecnicaEnfoque.POMODORO));
         btnDeepWork.setOnClickListener(v -> irATemporizador(TecnicaEnfoque.DEEP_WORK));
+
+        // Ahora estos métodos abren los Dialogs personalizados
         btnAvance.setOnClickListener(v -> mostrarDialogoAvance());
         btnEliminar.setOnClickListener(v -> mostrarDialogoEliminar());
     }
@@ -80,7 +85,6 @@ public class DetalleActividadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recargamos los datos al volver del temporizador por si hubo cambios
         cargarDatos();
     }
 
@@ -105,24 +109,24 @@ public class DetalleActividadActivity extends AppCompatActivity {
 
         if (porcentaje >= 100) {
             estadoTexto = "¡COMPLETADA!";
-            colorEstado = Color.parseColor("#4CAF50"); // Verde
+            colorEstado = Color.parseColor("#4CAF50");
             btnAvance.setVisibility(View.GONE);
             btnPomodoro.setEnabled(false);
             btnDeepWork.setEnabled(false);
         } else if (porcentaje > 0) {
             estadoTexto = "EN PROGRESO";
-            colorEstado = Color.parseColor("#FF9800"); // Naranja
+            colorEstado = Color.parseColor("#FF9800");
             btnAvance.setVisibility(View.VISIBLE);
         } else {
             estadoTexto = "PENDIENTE";
-            colorEstado = Color.parseColor("#757575"); // Gris
+            colorEstado = Color.parseColor("#757575");
             btnAvance.setVisibility(View.VISIBLE);
         }
 
         tvAvance.setText(estadoTexto + " (" + porcentaje + "%)");
         tvAvance.setTextColor(colorEstado);
 
-        // 4. Polimorfismo (Datos específicos)
+        // 4. Polimorfismo
         if (actividad instanceof ActividadAcademica) {
             ActividadAcademica ac = (ActividadAcademica) actividad;
             String info = "Materia: " + ac.getAsignatura() + "\n" +
@@ -136,8 +140,8 @@ public class DetalleActividadActivity extends AppCompatActivity {
             tvDetalleExtra.setText(info);
         }
 
-        // 5. Historial de Sesiones (Visualmente mejorado)
-        layoutHistorialContainer.removeAllViews(); // Limpiar lista anterior
+        // 5. Historial de Sesiones
+        layoutHistorialContainer.removeAllViews();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd MMM, HH:mm");
 
         if (actividad.getHistorialSesiones().isEmpty()) {
@@ -148,10 +152,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
             layoutHistorialContainer.addView(vacio);
         } else {
             LayoutInflater inflater = LayoutInflater.from(this);
-
             for (SesionEnfoque sesion : actividad.getHistorialSesiones()) {
-                // Inflamos el XML 'item_sesion_historial' que creaste en el paso anterior
-                // Si te da error en R.layout.item_sesion_historial, asegúrate de haber creado el XML
                 View view = inflater.inflate(R.layout.item_sesion_historial, layoutHistorialContainer, false);
 
                 TextView tvTecnica = view.findViewById(R.id.tvTecnicaSesion);
@@ -159,65 +160,124 @@ public class DetalleActividadActivity extends AppCompatActivity {
                 TextView tvDuracion = view.findViewById(R.id.tvDuracionSesion);
                 ImageView img = view.findViewById(R.id.imgTipoSesion);
 
-                // Llenar datos
                 tvTecnica.setText(sesion.getTecnica().toString().replace("_", " "));
                 tvFecha.setText(sesion.getFechaHora().format(timeFormatter));
                 tvDuracion.setText(sesion.getDuracionMinutos() + " min");
 
-                // Cambiar icono/color según técnica
                 if (sesion.getTecnica() == TecnicaEnfoque.POMODORO) {
-                    // Rojo suave para Pomodoro
                     img.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFEBEE")));
                     img.setColorFilter(Color.parseColor("#D32F2F"));
                 } else {
-                    // Morado suave para Deep Work
                     img.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EDE7F6")));
                     img.setColorFilter(Color.parseColor("#673AB7"));
                 }
-
                 layoutHistorialContainer.addView(view);
             }
         }
     }
 
+    // --- DIALOGO 1: REGISTRAR AVANCE ---
     private void mostrarDialogoAvance() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Actualizar Progreso");
-        builder.setMessage("Ingresa el porcentaje total acumulado (0-100%):");
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_registrar_avance);
+        dialog.setCancelable(true);
 
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        input.setHint("Ej: " + ((int)actividad.getPorcentajeAvance()));
-        builder.setView(input);
+        TextView tvNombre = dialog.findViewById(R.id.tvDialogActividadNombre);
+        TextView tvActual = dialog.findViewById(R.id.tvDialogAvanceActual);
+        EditText etNuevo = dialog.findViewById(R.id.etDialogNuevoAvance);
+        Button btnCancel = dialog.findViewById(R.id.btnCancelarAvance);
+        Button btnGuardar = dialog.findViewById(R.id.btnGuardarAvance);
 
-        builder.setPositiveButton("Guardar", (dialog, which) -> {
-            String texto = input.getText().toString();
-            if (!texto.isEmpty()) {
-                double nuevoAvance = Double.parseDouble(texto);
-                if (nuevoAvance < 0) nuevoAvance = 0;
-                if (nuevoAvance > 100) nuevoAvance = 100;
+        tvNombre.setText(actividad.getNombre());
+        tvActual.setText("Avance actual: " + (int) actividad.getPorcentajeAvance() + "%");
 
-                actividad.setPorcentajeAvance(nuevoAvance);
-                Repositorio.getInstance().actualizarActividad(actividad);
-                cargarDatos();
-                Toast.makeText(this, "Progreso actualizado", Toast.LENGTH_SHORT).show();
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnGuardar.setOnClickListener(v -> {
+            String input = etNuevo.getText().toString().trim();
+            if (TextUtils.isEmpty(input)) {
+                etNuevo.setError("Ingresa un valor");
+                return;
+            }
+            try {
+                double nuevoAvance = Double.parseDouble(input.replace(",", "."));
+                if (nuevoAvance < 0 || nuevoAvance > 100) {
+                    etNuevo.setError("Debe ser entre 0 y 100");
+                    return;
+                }
+                dialog.dismiss();
+                // Llamamos a la confirmación
+                mostrarConfirmacionAvance(nuevoAvance);
+
+            } catch (NumberFormatException e) {
+                etNuevo.setError("Número inválido");
             }
         });
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
-        builder.show();
+
+        dialog.show();
+        configurarVentanaTransparente(dialog);
     }
 
+    // --- DIALOGO 2: CONFIRMAR AVANCE ---
+    private void mostrarConfirmacionAvance(double nuevoAvance) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_confirmar_avance);
+
+        TextView tvMensaje = dialog.findViewById(R.id.tvMensajeConfirmacion);
+        Button btnNo = dialog.findViewById(R.id.btnNoConfirmar);
+        Button btnSi = dialog.findViewById(R.id.btnSiConfirmar);
+
+        tvMensaje.setText("¿Estás seguro que quieres que la actividad " + actividad.getNombre() +
+                " tenga un progreso del " + (int) nuevoAvance + "%?");
+
+        btnNo.setOnClickListener(v -> dialog.dismiss());
+
+        btnSi.setOnClickListener(v -> {
+            actividad.setPorcentajeAvance(nuevoAvance);
+            Repositorio.getInstance().actualizarActividad(actividad);
+            cargarDatos(); // Refrescar pantalla
+            Toast.makeText(this, "Progreso actualizado", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        });
+
+        dialog.show();
+        configurarVentanaTransparente(dialog);
+    }
+
+    // --- DIALOGO 3: ELIMINAR ACTIVIDAD ---
     private void mostrarDialogoEliminar() {
-        new AlertDialog.Builder(this)
-                .setTitle("¿Eliminar Actividad?")
-                .setMessage("Estás a punto de eliminar '" + actividad.getNombre() + "'.\nEsta acción no se puede deshacer.")
-                .setPositiveButton("SÍ, ELIMINAR", (dialog, which) -> {
-                    Repositorio.getInstance().eliminarActividad(actividad);
-                    Toast.makeText(this, "Actividad eliminada", Toast.LENGTH_SHORT).show();
-                    finish(); // Cierra esta pantalla y vuelve a la lista
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_eliminar_actividad);
+
+        TextView tvMensaje = dialog.findViewById(R.id.tvMensajeEliminar);
+        Button btnCancelar = dialog.findViewById(R.id.btnCancelarEliminar);
+        Button btnEliminar = dialog.findViewById(R.id.btnAceptarEliminar);
+
+        tvMensaje.setText("¿Estás seguro de eliminar la actividad " + actividad.getNombre() + "?");
+
+        btnCancelar.setOnClickListener(v -> dialog.dismiss());
+
+        btnEliminar.setOnClickListener(v -> {
+            Repositorio.getInstance().eliminarActividad(actividad);
+            Toast.makeText(this, "Actividad eliminada", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+            finish(); // Volver a la lista
+        });
+
+        dialog.show();
+        configurarVentanaTransparente(dialog);
+    }
+
+    // Método auxiliar para evitar código repetido de transparencia
+    private void configurarVentanaTransparente(Dialog dialog) {
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     private void irATemporizador(TecnicaEnfoque tecnica) {

@@ -31,22 +31,10 @@ import com.example.menuaplication.model.Prioridad;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * ActividadAdapter - versión funcional y consistente
- *
- * Requisitos:
- * - Usa Dialog (no AlertDialog.Builder) para diálogos personalizados (con excepción del menú de opciones).
- * - Forzar transparencia del Window y setLayout AFTER dialog.show().
- * - Manejo robusto de NumberFormatException.
- * - Abre confirmación inmediatamente después del dismiss() del diálogo de registro.
- *
- * IMPORTANTE: instancia este adapter desde una Activity pasando "this":
- *     ActividadAdapter adapter = new ActividadAdapter(miListaActividades, this);
- */
 public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.ViewHolder> {
 
     private List<Actividad> actividades;
-    private final Activity activity; // Activity garantizada para crear Dialogs
+    private final Activity activity;
     private static final String TAG = "ActividadAdapter";
 
     public ActividadAdapter(List<Actividad> actividades, Activity activity) {
@@ -78,7 +66,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         holder.progressBar.setProgress((int) actividad.getPorcentajeAvance());
         holder.tvPorcentaje.setText((int) actividad.getPorcentajeAvance() + "%");
 
-        // Estado
+        // Estado y Colores
         if (actividad.getPorcentajeAvance() >= 100) {
             holder.tvEstado.setText("COMPLETADA");
             holder.tvEstado.setTextColor(Color.parseColor("#4CAF50"));
@@ -110,7 +98,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             holder.tvFecha.setText("Sin fecha");
         }
 
-        // Click para detalle
+        // Click corto -> Detalle
         holder.itemView.setOnClickListener(v -> {
             Context vCtx = v.getContext();
             Intent intent = new Intent(vCtx, DetalleActividadActivity.class);
@@ -118,31 +106,22 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             vCtx.startActivity(intent);
         });
 
-        // Long click -> opciones (usamos contexto del view para mayor seguridad)
+        // Click largo -> Opciones (usando el contexto de la vista)
         holder.itemView.setOnLongClickListener(v -> {
             mostrarOpciones(actividad, holder.getAdapterPosition(), v.getContext());
             return true;
         });
     }
 
-    /**
-     * Muestra un menú sencillo con dos opciones.
-     * Usa viewContext (de la vista que disparó el evento) para asegurar que sea Activity.
-     */
     private void mostrarOpciones(Actividad actividad, int position, Context viewContext) {
         Context ctx = (viewContext != null) ? viewContext : activity;
-        if (!(ctx instanceof Activity)) {
-            Log.e(TAG, "mostrarOpciones: contexto inválido");
-            Toast.makeText(ctx, "Contexto inválido para mostrar opciones", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (!(ctx instanceof Activity)) return;
 
         String[] options = {"Registrar Avance", "Eliminar Actividad"};
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(actividad.getNombre());
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) {
-                // PASAMOS el contexto del view para evitar BadTokenException
                 mostrarDialogoAvance(actividad, position, ctx);
             } else {
                 mostrarDialogoEliminar(actividad, position, ctx);
@@ -156,26 +135,20 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
     // ---------------------------
     private void mostrarDialogoAvance(Actividad actividad, int position, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
-        if (!(ctx instanceof Activity)) {
-            Log.e(TAG, "mostrarDialogoAvance: contexto inválido");
-            Toast.makeText(ctx, "No se puede mostrar diálogo (contexto inválido).", Toast.LENGTH_LONG).show();
-            return;
-        }
+        if (!(ctx instanceof Activity)) return;
         Activity dialogActivity = (Activity) ctx;
 
         try {
             final Dialog dialog = new Dialog(dialogActivity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_registrar_avance);
             dialog.setCancelable(true);
 
-            View view = LayoutInflater.from(dialogActivity).inflate(R.layout.dialog_registrar_avance, null);
-            dialog.setContentView(view);
-
-            TextView tvNombre = view.findViewById(R.id.tvDialogActividadNombre);
-            TextView tvActual = view.findViewById(R.id.tvDialogAvanceActual);
-            EditText etNuevo = view.findViewById(R.id.etDialogNuevoAvance);
-            Button btnCancel = view.findViewById(R.id.btnCancelarAvance);
-            Button btnGuardar = view.findViewById(R.id.btnGuardarAvance);
+            TextView tvNombre = dialog.findViewById(R.id.tvDialogActividadNombre);
+            TextView tvActual = dialog.findViewById(R.id.tvDialogAvanceActual);
+            EditText etNuevo = dialog.findViewById(R.id.etDialogNuevoAvance);
+            Button btnCancel = dialog.findViewById(R.id.btnCancelarAvance);
+            Button btnGuardar = dialog.findViewById(R.id.btnGuardarAvance);
 
             if (tvNombre != null) tvNombre.setText(actividad.getNombre());
             if (tvActual != null) tvActual.setText("Avance actual: " + (int) actividad.getPorcentajeAvance() + "%");
@@ -189,49 +162,28 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
                         if (etNuevo != null) etNuevo.setError("Ingresa un valor");
                         return;
                     }
-                    input = input.replace(",", ".");
                     try {
-                        double nuevoAvance = Double.parseDouble(input);
+                        double nuevoAvance = Double.parseDouble(input.replace(",", "."));
                         if (nuevoAvance < 0 || nuevoAvance > 100) {
                             if (etNuevo != null) etNuevo.setError("Debe ser entre 0 y 100");
                             return;
                         }
 
-                        // Cerrar dialog y abrir confirmación
                         dialog.dismiss();
+                        // Pasamos al diálogo de confirmación
                         mostrarConfirmacionAvance(actividad, position, nuevoAvance, callerContext);
 
                     } catch (NumberFormatException nfe) {
-                        if (etNuevo != null) {
-                            etNuevo.setError("Número inválido");
-                            etNuevo.requestFocus();
-                        }
-                        Log.e(TAG, "Error parsing double: " + input, nfe);
-                    } catch (Exception ex) {
-                        Log.e(TAG, "Error inesperado en guardar avance: " + ex.getMessage(), ex);
-                        Toast.makeText(dialogActivity, "Error inesperado", Toast.LENGTH_SHORT).show();
+                        if (etNuevo != null) etNuevo.setError("Número inválido");
                     }
                 });
-            } else {
-                Log.w(TAG, "btnGuardarAvance no encontrado en dialog_registrar_avance.xml");
             }
 
-            // Mostrar y luego ajustar window para que el fondo transparente y layout se apliquen correctamente
-            try {
-                dialog.show();
-                Window w = dialog.getWindow();
-                if (w != null) {
-                    w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    w.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                }
-            } catch (WindowManager.BadTokenException bt) {
-                Log.e(TAG, "BadTokenException mostrarDialogoAvance", bt);
-                Toast.makeText(dialogActivity, "No se pudo mostrar el diálogo (token inválido).", Toast.LENGTH_LONG).show();
-            }
+            dialog.show();
+            configurarVentanaTransparente(dialog);
 
         } catch (Exception e) {
             Log.e(TAG, "Error al abrir dialogo registrar avance", e);
-            Toast.makeText(activity, "Error al abrir diálogo", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -240,23 +192,17 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
     // ---------------------------
     private void mostrarConfirmacionAvance(Actividad actividad, int position, double nuevoAvance, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
-        if (!(ctx instanceof Activity)) {
-            Log.e(TAG, "mostrarConfirmacionAvance: contexto inválido");
-            Toast.makeText(ctx, "No se puede mostrar confirmación (contexto inválido).", Toast.LENGTH_LONG).show();
-            return;
-        }
+        if (!(ctx instanceof Activity)) return;
         Activity dialogActivity = (Activity) ctx;
 
         try {
             final Dialog dialog = new Dialog(dialogActivity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_confirmar_avance);
 
-            View view = LayoutInflater.from(dialogActivity).inflate(R.layout.dialog_confirmar_avance, null);
-            dialog.setContentView(view);
-
-            TextView tvMensaje = view.findViewById(R.id.tvMensajeConfirmacion);
-            Button btnNo = view.findViewById(R.id.btnNoConfirmar);
-            Button btnSi = view.findViewById(R.id.btnSiConfirmar);
+            TextView tvMensaje = dialog.findViewById(R.id.tvMensajeConfirmacion);
+            Button btnNo = dialog.findViewById(R.id.btnNoConfirmar);
+            Button btnSi = dialog.findViewById(R.id.btnSiConfirmar);
 
             if (tvMensaje != null) {
                 tvMensaje.setText("¿Estás seguro que quieres que la actividad " + actividad.getNombre() +
@@ -267,39 +213,22 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
 
             if (btnSi != null) {
                 btnSi.setOnClickListener(v -> {
-                    try {
-                        actividad.setPorcentajeAvance(nuevoAvance);
-                        if (position >= 0 && position < actividades.size()) {
-                            notifyItemChanged(position);
-                        } else {
-                            notifyDataSetChanged();
-                        }
-                        Toast.makeText(dialogActivity, "Progreso actualizado", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    } catch (Exception ex) {
-                        Log.e(TAG, "Error al confirmar avance", ex);
-                        Toast.makeText(dialogActivity, "Error al confirmar avance", Toast.LENGTH_SHORT).show();
+                    actividad.setPorcentajeAvance(nuevoAvance);
+                    if (position >= 0 && position < actividades.size()) {
+                        notifyItemChanged(position);
+                    } else {
+                        notifyDataSetChanged();
                     }
+                    Toast.makeText(dialogActivity, "Progreso actualizado", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 });
-            } else {
-                Log.w(TAG, "btnSiConfirmar no encontrado en dialog_confirmar_avance.xml");
             }
 
-            try {
-                dialog.show();
-                Window w = dialog.getWindow();
-                if (w != null) {
-                    w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    w.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                }
-            } catch (WindowManager.BadTokenException bt) {
-                Log.e(TAG, "BadTokenException mostrarConfirmacionAvance", bt);
-                Toast.makeText(dialogActivity, "No se pudo mostrar confirmación (token inválido).", Toast.LENGTH_LONG).show();
-            }
+            dialog.show();
+            configurarVentanaTransparente(dialog);
 
         } catch (Exception e) {
             Log.e(TAG, "Error en mostrarConfirmacionAvance", e);
-            Toast.makeText(activity, "Error confirmación: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -308,23 +237,17 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
     // ---------------------------
     private void mostrarDialogoEliminar(Actividad actividad, int position, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
-        if (!(ctx instanceof Activity)) {
-            Log.e(TAG, "mostrarDialogoEliminar: contexto inválido");
-            Toast.makeText(ctx, "No se puede mostrar diálogo (contexto inválido).", Toast.LENGTH_LONG).show();
-            return;
-        }
+        if (!(ctx instanceof Activity)) return;
         Activity dialogActivity = (Activity) ctx;
 
         try {
             final Dialog dialog = new Dialog(dialogActivity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_eliminar_actividad);
 
-            View view = LayoutInflater.from(dialogActivity).inflate(R.layout.dialog_eliminar_actividad, null);
-            dialog.setContentView(view);
-
-            TextView tvMensaje = view.findViewById(R.id.tvMensajeEliminar);
-            Button btnCancelar = view.findViewById(R.id.btnCancelarEliminar);
-            Button btnEliminar = view.findViewById(R.id.btnAceptarEliminar);
+            TextView tvMensaje = dialog.findViewById(R.id.tvMensajeEliminar);
+            Button btnCancelar = dialog.findViewById(R.id.btnCancelarEliminar);
+            Button btnEliminar = dialog.findViewById(R.id.btnAceptarEliminar);
 
             if (tvMensaje != null) tvMensaje.setText("¿Estás seguro de eliminar la actividad " + actividad.getNombre() + "?");
 
@@ -332,40 +255,29 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
 
             if (btnEliminar != null) {
                 btnEliminar.setOnClickListener(v -> {
-                    try {
-                        if (position >= 0 && position < actividades.size()) {
-                            actividades.remove(position);
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, actividades.size());
-                            Toast.makeText(dialogActivity, "Actividad eliminada", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(dialogActivity, "Posición inválida", Toast.LENGTH_SHORT).show();
-                        }
-                        dialog.dismiss();
-                    } catch (Exception ex) {
-                        Log.e(TAG, "Error al eliminar actividad", ex);
-                        Toast.makeText(dialogActivity, "Error al eliminar actividad", Toast.LENGTH_SHORT).show();
+                    if (position >= 0 && position < actividades.size()) {
+                        actividades.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, actividades.size());
+                        Toast.makeText(dialogActivity, "Actividad eliminada", Toast.LENGTH_SHORT).show();
                     }
+                    dialog.dismiss();
                 });
-            } else {
-                Log.w(TAG, "btnAceptarEliminar no encontrado en dialog_eliminar_actividad.xml");
             }
 
-            try {
-                dialog.show();
-                Window w = dialog.getWindow();
-                if (w != null) {
-                    w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    w.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                }
-            } catch (WindowManager.BadTokenException bt) {
-                Log.e(TAG, "BadTokenException mostrarDialogoEliminar", bt);
-                Toast.makeText(dialogActivity, "No se pudo mostrar diálogo eliminar (token inválido).", Toast.LENGTH_LONG).show();
-            }
+            dialog.show();
+            configurarVentanaTransparente(dialog);
 
         } catch (Exception e) {
             Log.e(TAG, "Error en mostrarDialogoEliminar", e);
-            Toast.makeText(activity, "Error al mostrar eliminar: Verifica IDs XML", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void configurarVentanaTransparente(Dialog dialog) {
+        Window w = dialog.getWindow();
+        if (w != null) {
+            w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            w.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 
