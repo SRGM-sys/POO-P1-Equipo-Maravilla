@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate; // Para el modo claro
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.menuaplication.ui.menu.MainActivity;
 import com.example.menuaplication.R;
+import com.example.menuaplication.data.Repositorio; // <--- 1. NO OLVIDES ESTE IMPORT
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -16,28 +17,27 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 1. Forzamos modo claro (igual que en tu menú)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         setContentView(R.layout.activity_splash);
 
-        // 2. Ocultar la barra superior para que se vea pantalla completa
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        // 3. Temporizador de 3 segundos (3000 milisegundos)
+        // -----------------------------------------------------------
+        // 2. AQUÍ INICIALIZAMOS EL REPOSITORIO
+        // Al pasarle 'this', le damos el contexto para que encuentre
+        // la carpeta de archivos y cargue los datos guardados.
+        // -----------------------------------------------------------
+        Repositorio.getInstance(this);
+
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Código que se ejecuta después del tiempo
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
-
-                // IMPORTANTE: Matar la SplashActivity para que si el usuario
-                // da click en "Atrás", no vuelva a ver la pantalla de carga.
                 finish();
             }
-        }, 3000); // <-- Aquí cambias el tiempo si quieres
+        }, 3000);
     }
 }

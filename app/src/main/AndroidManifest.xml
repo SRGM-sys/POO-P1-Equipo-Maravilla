@@ -26,6 +26,17 @@
         <activity
             android:name=".ui.menu.MainActivity"
             android:exported="false"></activity>
+
+        <activity android:name=".ui.ListaActividadesActivity" />
+        <activity android:name=".ui.CrearActividadActivity" />
+        <activity android:name=".ui.DetalleActividadActivity" />
+        <activity android:name=".ui.TemporizadorActivity" />
+
+        <activity
+            android:name=".ui.EditarActividadActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>
