@@ -27,13 +27,13 @@
             android:name=".ui.menu.MainActivity"
             android:exported="false"></activity>
 
-        <activity android:name=".ui.ListaActividadesActivity" />
-        <activity android:name=".ui.CrearActividadActivity" />
-        <activity android:name=".ui.DetalleActividadActivity" />
-        <activity android:name=".ui.TemporizadorActivity" />
+        <activity android:name=".ui.actividades.ListaActividadesActivity" />
+        <activity android:name=".ui.actividades.CrearActividadActivity" />
+        <activity android:name=".ui.actividades.DetalleActividadActivity" />
+        <activity android:name=".ui.actividades.TemporizadorActivity" />
 
         <activity
-            android:name=".ui.EditarActividadActivity"
+            android:name=".ui.actividades.EditarActividadActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 

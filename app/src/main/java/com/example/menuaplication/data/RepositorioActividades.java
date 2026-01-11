@@ -3,13 +3,13 @@ package com.example.menuaplication.data;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.menuaplication.model.Actividad;
-import com.example.menuaplication.model.ActividadAcademica;
-import com.example.menuaplication.model.ActividadPersonal;
-import com.example.menuaplication.model.Prioridad;
-import com.example.menuaplication.model.SesionEnfoque;
-import com.example.menuaplication.model.TecnicaEnfoque;
-import com.example.menuaplication.model.TipoAcademica;
+import com.example.menuaplication.model.actividades.Actividad;
+import com.example.menuaplication.model.actividades.ActividadAcademica;
+import com.example.menuaplication.model.actividades.ActividadPersonal;
+import com.example.menuaplication.model.actividades.Prioridad;
+import com.example.menuaplication.model.actividades.SesionEnfoque;
+import com.example.menuaplication.model.actividades.TecnicaEnfoque;
+import com.example.menuaplication.model.actividades.TipoAcademica;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,26 +21,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Repositorio {
-    private static Repositorio instance;
+public class RepositorioActividades {
+    private static RepositorioActividades instance;
     private List<Actividad> listaActividades;
     private Context context;
     private static final String NOMBRE_ARCHIVO = "actividades_data.ser";
 
-    private Repositorio(Context context) {
+    private RepositorioActividades(Context context) {
         this.context = context.getApplicationContext();
         this.listaActividades = new ArrayList<>();
         cargarDesdeArchivo();
     }
 
-    public static Repositorio getInstance(Context context) {
+    public static RepositorioActividades getInstance(Context context) {
         if (instance == null) {
-            instance = new Repositorio(context);
+            instance = new RepositorioActividades(context);
         }
         return instance;
     }
 
-    public static Repositorio getInstance() {
+    public static RepositorioActividades getInstance() {
         if (instance == null) {
             throw new RuntimeException("Debes inicializar el repositorio con getInstance(Context) primero");
         }
@@ -54,9 +54,9 @@ public class Repositorio {
         try (FileOutputStream fos = new FileOutputStream(archivo);
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(listaActividades);
-            Log.d("Repositorio", "Datos guardados en: " + archivo.getAbsolutePath());
+            Log.d("RepositorioActividades", "Datos guardados en: " + archivo.getAbsolutePath());
         } catch (IOException e) {
-            Log.e("Repositorio", "Error al guardar: " + e.getMessage());
+            Log.e("RepositorioActividades", "Error al guardar: " + e.getMessage());
         }
     }
 
@@ -103,29 +103,29 @@ public class Repositorio {
 
         listaActividades.add(new ActividadPersonal(
                 "Cita Médica", "Chequeo general",
-                LocalDateTime.of(2025, 1, 20, 10, 0),
+                LocalDateTime.of(2026, 1, 20, 10, 0),
                 Prioridad.ALTA, 60, "Hospital Kennedy"
         ));
 
         listaActividades.add(new ActividadAcademica(
                 "Tarea Estadística", "Taller 4",
-                LocalDateTime.of(2025, 1, 19, 23, 59),
+                LocalDateTime.of(2026, 1, 19, 23, 59),
                 Prioridad.MEDIA, 120, "Estadística", TipoAcademica.TAREA
         ));
 
         ActividadAcademica proyecto = new ActividadAcademica(
                 "Proyecto POO", "Desarrollo App",
-                LocalDateTime.of(2025, 1, 30, 23, 59),
+                LocalDateTime.of(2026, 1, 30, 23, 59),
                 Prioridad.ALTA, 300, "POO", TipoAcademica.PROYECTO
         );
-        proyecto.agregarSesion(new SesionEnfoque(LocalDateTime.of(2025, 1, 15, 10, 0), 25, TecnicaEnfoque.POMODORO, true));
-        proyecto.agregarSesion(new SesionEnfoque(LocalDateTime.of(2025, 1, 16, 11, 0), 25, TecnicaEnfoque.POMODORO, true));
+        proyecto.agregarSesion(new SesionEnfoque(LocalDateTime.of(2026, 1, 15, 10, 0), 25, TecnicaEnfoque.POMODORO, true));
+        proyecto.agregarSesion(new SesionEnfoque(LocalDateTime.of(2026, 1, 16, 11, 0), 25, TecnicaEnfoque.POMODORO, true));
         proyecto.setPorcentajeAvance(70.0);
         listaActividades.add(proyecto);
 
         listaActividades.add(new ActividadAcademica(
                 "Examen POO", "Parcial 1",
-                LocalDateTime.of(2025, 1, 23, 14, 0),
+                LocalDateTime.of(2026, 1, 23, 14, 0),
                 Prioridad.ALTA, 120, "POO", TipoAcademica.EXAMEN
         ));
 

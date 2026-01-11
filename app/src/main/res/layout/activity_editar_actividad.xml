@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:padding="20dp"
-    tools:context=".ui.EditarActividadActivity">
+    tools:context=".ui.actividades.EditarActividadActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

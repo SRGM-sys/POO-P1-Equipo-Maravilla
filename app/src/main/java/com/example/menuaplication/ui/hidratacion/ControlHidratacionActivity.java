@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.model.RegistroAgua;
+import com.example.menuaplication.model.hidratacion.RegistroAgua;
 
 import java.util.ArrayList;
 import java.util.Calendar;

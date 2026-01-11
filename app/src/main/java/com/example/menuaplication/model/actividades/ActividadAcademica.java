@@ -1,4 +1,4 @@
-package com.example.menuaplication.model;
+package com.example.menuaplication.model.actividades;
 
 import java.time.LocalDateTime;
 

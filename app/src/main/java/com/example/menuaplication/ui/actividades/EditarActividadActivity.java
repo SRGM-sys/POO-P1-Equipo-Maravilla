@@ -1,4 +1,4 @@
-package com.example.menuaplication.ui;
+package com.example.menuaplication.ui.actividades;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback; // IMPORTANTE: Nueva importación
@@ -19,12 +18,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.data.Repositorio;
-import com.example.menuaplication.model.Actividad;
-import com.example.menuaplication.model.ActividadAcademica;
-import com.example.menuaplication.model.ActividadPersonal;
-import com.example.menuaplication.model.Prioridad;
-import com.example.menuaplication.model.TipoAcademica;
+import com.example.menuaplication.data.RepositorioActividades;
+import com.example.menuaplication.model.actividades.Actividad;
+import com.example.menuaplication.model.actividades.ActividadAcademica;
+import com.example.menuaplication.model.actividades.ActividadPersonal;
+import com.example.menuaplication.model.actividades.Prioridad;
+import com.example.menuaplication.model.actividades.TipoAcademica;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -231,7 +230,7 @@ public class EditarActividadActivity extends AppCompatActivity {
         }
 
         // Guardar
-        Repositorio.getInstance().actualizarActividad(actividadAEditar);
+        RepositorioActividades.getInstance().actualizarActividad(actividadAEditar);
 
         Toast.makeText(this, "Cambios guardados", Toast.LENGTH_SHORT).show();
 

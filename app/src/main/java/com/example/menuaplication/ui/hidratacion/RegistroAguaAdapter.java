@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.menuaplication.R;
-import com.example.menuaplication.model.RegistroAgua;
+import com.example.menuaplication.model.hidratacion.RegistroAgua;
 import java.util.List;
 
 public class RegistroAguaAdapter extends RecyclerView.Adapter<RegistroAguaAdapter.ViewHolder> {

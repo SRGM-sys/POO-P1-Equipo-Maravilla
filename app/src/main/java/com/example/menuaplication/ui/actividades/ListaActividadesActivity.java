@@ -1,4 +1,4 @@
-package com.example.menuaplication.ui;
+package com.example.menuaplication.ui.actividades;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.data.Repositorio;
-import com.example.menuaplication.model.Actividad;
-import com.example.menuaplication.model.ActividadAcademica;
-import com.example.menuaplication.model.ActividadPersonal;
+import com.example.menuaplication.data.RepositorioActividades;
+import com.example.menuaplication.model.actividades.Actividad;
+import com.example.menuaplication.model.actividades.ActividadAcademica;
+import com.example.menuaplication.model.actividades.ActividadPersonal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,7 +92,7 @@ public class ListaActividadesActivity extends AppCompatActivity {
     }
 
     private void refrescarLista() {
-        List<Actividad> todas = Repositorio.getInstance().getListaActividades();
+        List<Actividad> todas = RepositorioActividades.getInstance().getListaActividades();
         List<Actividad> filtradas = new ArrayList<>();
 
         // 1. Filtro

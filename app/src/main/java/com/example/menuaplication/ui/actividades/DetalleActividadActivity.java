@@ -1,4 +1,4 @@
-package com.example.menuaplication.ui;
+package com.example.menuaplication.ui.actividades;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -24,25 +24,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.data.Repositorio;
-import com.example.menuaplication.model.Actividad;
-import com.example.menuaplication.model.ActividadAcademica;
-import com.example.menuaplication.model.ActividadPersonal;
-import com.example.menuaplication.model.SesionEnfoque;
-import com.example.menuaplication.model.TecnicaEnfoque;
+import com.example.menuaplication.data.RepositorioActividades;
+import com.example.menuaplication.model.actividades.Actividad;
+import com.example.menuaplication.model.actividades.ActividadAcademica;
+import com.example.menuaplication.model.actividades.ActividadPersonal;
+import com.example.menuaplication.model.actividades.SesionEnfoque;
+import com.example.menuaplication.model.actividades.TecnicaEnfoque;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DetalleActividadActivity extends AppCompatActivity {
 
-    // Constante para identificar la petición de editar
     private static final int REQUEST_CODE_EDITAR = 1001;
 
     private Actividad actividad;
     private TextView tvTitulo, tvDesc, tvDetalleExtra, tvAvance, tvId, tvTiempoEst, tvTiempoInv;
     private ProgressBar pbAvance;
     private LinearLayout layoutHistorialContainer;
-    private Button btnPomodoro, btnDeepWork, btnAvance, btnEliminar, btnEditar; // Añadido btnEditar
+    private Button btnPomodoro, btnDeepWork, btnAvance, btnEliminar, btnEditar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,6 @@ public class DetalleActividadActivity extends AppCompatActivity {
         btnDeepWork = findViewById(R.id.btnDeepWork);
         btnAvance = findViewById(R.id.btnRegistrarAvance);
         btnEliminar = findViewById(R.id.btnEliminar);
-
-        // VINCULACIÓN DEL NUEVO BOTÓN
         btnEditar = findViewById(R.id.btnEditarActividad);
 
         // Configurar botón volver
@@ -82,29 +80,24 @@ public class DetalleActividadActivity extends AppCompatActivity {
         // Listeners
         btnPomodoro.setOnClickListener(v -> irATemporizador(TecnicaEnfoque.POMODORO));
         btnDeepWork.setOnClickListener(v -> irATemporizador(TecnicaEnfoque.DEEP_WORK));
-
-        // Ahora estos métodos abren los Dialogs personalizados
         btnAvance.setOnClickListener(v -> mostrarDialogoAvance());
         btnEliminar.setOnClickListener(v -> mostrarDialogoEliminar());
 
-        // LÓGICA BOTÓN EDITAR (NUEVO)
         btnEditar.setOnClickListener(v -> {
             Intent intent = new Intent(DetalleActividadActivity.this, EditarActividadActivity.class);
-            intent.putExtra("actividad_a_editar", actividad); // Enviamos la actividad actual
-            startActivityForResult(intent, REQUEST_CODE_EDITAR); // Iniciamos esperando respuesta
+            intent.putExtra("actividad_a_editar", actividad);
+            startActivityForResult(intent, REQUEST_CODE_EDITAR);
         });
     }
 
-    // MÉTODO PARA CAPTURAR LOS CAMBIOS AL VOLVER DE EDITAR (NUEVO)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_EDITAR && resultCode == RESULT_OK && data != null) {
-            // Recuperar la actividad modificada del Intent de respuesta
             Actividad actividadModificada = (Actividad) data.getSerializableExtra("actividad_actualizada");
             if (actividadModificada != null) {
                 this.actividad = actividadModificada;
-                cargarDatos(); // Actualizar la UI con los nuevos datos (nombre, desc, fecha, etc.)
+                cargarDatos();
                 Toast.makeText(this, "Actividad actualizada", Toast.LENGTH_SHORT).show();
             }
         }
@@ -113,9 +106,8 @@ public class DetalleActividadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recargar datos por si volvimos del Temporizador (que guarda cambios en disco)
-        // Buscamos la versión más reciente en el repositorio por si acaso
-        for (Actividad a : Repositorio.getInstance().getActividades()) {
+        // Recargar datos por si volvimos del Temporizador (o de cualquier otro lado)
+        for (Actividad a : RepositorioActividades.getInstance().getActividades()) {
             if (a.getId() == actividad.getId()) {
                 this.actividad = a;
                 break;
@@ -136,26 +128,33 @@ public class DetalleActividadActivity extends AppCompatActivity {
         tvTiempoEst.setText("Estimado: " + actividad.getTiempoEstimadoMinutos() + " min");
         tvTiempoInv.setText("Invertido: " + actividad.getMinutosInvertidos() + " min");
 
-        // 3. Estado y Barra de Progreso
+        // 3. Estado, Vencimiento y Barra de Progreso
         int porcentaje = (int) actividad.getPorcentajeAvance();
         pbAvance.setProgress(porcentaje);
 
         String estadoTexto = "";
         int colorEstado = Color.BLACK;
 
+        // VERIFICAR SI ESTÁ VENCIDA
+        boolean esVencida = actividad.getFechaVencimiento().isBefore(LocalDateTime.now()) && porcentaje < 100;
+
         if (porcentaje >= 100) {
             estadoTexto = "¡COMPLETADA!";
-            colorEstado = Color.parseColor("#4CAF50");
+            colorEstado = Color.parseColor("#4CAF50"); // Verde
             btnAvance.setVisibility(View.GONE);
             btnPomodoro.setEnabled(false);
             btnDeepWork.setEnabled(false);
+        } else if (esVencida) {
+            estadoTexto = "¡VENCIDA!";
+            colorEstado = Color.parseColor("#D32F2F"); // Rojo
+            btnAvance.setVisibility(View.VISIBLE); // Dejamos visible por si quiere completarla tarde
         } else if (porcentaje > 0) {
             estadoTexto = "EN PROGRESO";
-            colorEstado = Color.parseColor("#FF9800");
+            colorEstado = Color.parseColor("#FF9800"); // Naranja
             btnAvance.setVisibility(View.VISIBLE);
         } else {
             estadoTexto = "PENDIENTE";
-            colorEstado = Color.parseColor("#757575");
+            colorEstado = Color.parseColor("#757575"); // Gris
             btnAvance.setVisibility(View.VISIBLE);
         }
 
@@ -163,18 +162,19 @@ public class DetalleActividadActivity extends AppCompatActivity {
         tvAvance.setTextColor(colorEstado);
 
         // 4. Polimorfismo
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         if (actividad instanceof ActividadAcademica) {
             ActividadAcademica ac = (ActividadAcademica) actividad;
             String info = "Materia: " + ac.getAsignatura() + "\n" +
                     "Tipo: " + ac.getTipo() + "\n" +
                     "Prioridad: " + ac.getPrioridad() + "\n" +
-                    "Vence: " + ac.getFechaVencimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    "Vence: " + ac.getFechaVencimiento().format(formatter);
             tvDetalleExtra.setText(info);
         } else if (actividad instanceof ActividadPersonal) {
             ActividadPersonal ap = (ActividadPersonal) actividad;
             String info = "Lugar: " + ap.getLugar() + "\n" +
                     "Prioridad: " + ap.getPrioridad() + "\n" +
-                    "Vence: " + ap.getFechaVencimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    "Vence: " + ap.getFechaVencimiento().format(formatter);
             tvDetalleExtra.setText(info);
         }
 
@@ -214,7 +214,6 @@ public class DetalleActividadActivity extends AppCompatActivity {
         }
     }
 
-    // --- DIALOGO 1: REGISTRAR AVANCE ---
     private void mostrarDialogoAvance() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -245,9 +244,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
                     return;
                 }
                 dialog.dismiss();
-                // Llamamos a la confirmación
                 mostrarConfirmacionAvance(nuevoAvance);
-
             } catch (NumberFormatException e) {
                 etNuevo.setError("Número inválido");
             }
@@ -257,7 +254,6 @@ public class DetalleActividadActivity extends AppCompatActivity {
         configurarVentanaTransparente(dialog);
     }
 
-    // --- DIALOGO 2: CONFIRMAR AVANCE ---
     private void mostrarConfirmacionAvance(double nuevoAvance) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -274,8 +270,8 @@ public class DetalleActividadActivity extends AppCompatActivity {
 
         btnSi.setOnClickListener(v -> {
             actividad.setPorcentajeAvance(nuevoAvance);
-            Repositorio.getInstance().actualizarActividad(actividad);
-            cargarDatos(); // Refrescar pantalla
+            RepositorioActividades.getInstance().actualizarActividad(actividad);
+            cargarDatos();
             Toast.makeText(this, "Progreso actualizado", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
@@ -284,7 +280,6 @@ public class DetalleActividadActivity extends AppCompatActivity {
         configurarVentanaTransparente(dialog);
     }
 
-    // --- DIALOGO 3: ELIMINAR ACTIVIDAD ---
     private void mostrarDialogoEliminar() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -299,17 +294,16 @@ public class DetalleActividadActivity extends AppCompatActivity {
         btnCancelar.setOnClickListener(v -> dialog.dismiss());
 
         btnEliminar.setOnClickListener(v -> {
-            Repositorio.getInstance().eliminarActividad(actividad);
+            RepositorioActividades.getInstance().eliminarActividad(actividad);
             Toast.makeText(this, "Actividad eliminada", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
-            finish(); // Volver a la lista
+            finish();
         });
 
         dialog.show();
         configurarVentanaTransparente(dialog);
     }
 
-    // Método auxiliar para evitar código repetido de transparencia
     private void configurarVentanaTransparente(Dialog dialog) {
         Window window = dialog.getWindow();
         if (window != null) {

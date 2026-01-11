@@ -1,4 +1,4 @@
-package com.example.menuaplication.ui;
+package com.example.menuaplication.ui.actividades;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -17,11 +17,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.data.Repositorio;
-import com.example.menuaplication.model.ActividadAcademica;
-import com.example.menuaplication.model.ActividadPersonal;
-import com.example.menuaplication.model.Prioridad;
-import com.example.menuaplication.model.TipoAcademica;
+import com.example.menuaplication.data.RepositorioActividades;
+import com.example.menuaplication.model.actividades.ActividadAcademica;
+import com.example.menuaplication.model.actividades.ActividadPersonal;
+import com.example.menuaplication.model.actividades.Prioridad;
+import com.example.menuaplication.model.actividades.TipoAcademica;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.time.LocalDateTime;
@@ -175,7 +175,7 @@ public class CrearActividadActivity extends AppCompatActivity {
                         nombre, desc, fechaVencimiento, prioridad, tiempoEstimado,
                         asignatura, tipo
                 );
-                Repositorio.getInstance().agregarActividad(nueva);
+                RepositorioActividades.getInstance().agregarActividad(nueva);
 
             } else {
                 // Es Personal
@@ -186,7 +186,7 @@ public class CrearActividadActivity extends AppCompatActivity {
                         nombre, desc, fechaVencimiento, prioridad, tiempoEstimado,
                         lugar
                 );
-                Repositorio.getInstance().agregarActividad(nueva);
+                RepositorioActividades.getInstance().agregarActividad(nueva);
             }
 
             Toast.makeText(this, "Actividad Guardada", Toast.LENGTH_SHORT).show();

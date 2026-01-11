@@ -1,4 +1,4 @@
-package com.example.menuaplication.ui;
+package com.example.menuaplication.ui.actividades;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -17,10 +17,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.data.Repositorio;
-import com.example.menuaplication.model.Actividad;
-import com.example.menuaplication.model.SesionEnfoque;
-import com.example.menuaplication.model.TecnicaEnfoque;
+import com.example.menuaplication.data.RepositorioActividades;
+import com.example.menuaplication.model.actividades.Actividad;
+import com.example.menuaplication.model.actividades.SesionEnfoque;
+import com.example.menuaplication.model.actividades.TecnicaEnfoque;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -29,10 +29,10 @@ import java.util.Random;
 public class TemporizadorActivity extends AppCompatActivity {
 
     // Vistas
-    private TextView tvTiempo, tvFrase, tvModoTitulo;
+    private TextView tvTiempo, tvFrase, tvModoTitulo, tvNombreActividad; // Añadido tvNombreActividad
     private ProgressBar progressBarTimer;
-    private Button btnIniciar, btnPausar, btnFinalizarAhora, btnReiniciar; // Añadido btnReiniciar
-    private ImageButton btnBack; // Añadido btnBack
+    private Button btnIniciar, btnPausar, btnFinalizarAhora, btnReiniciar;
+    private ImageButton btnBack;
     private LinearLayout containerOpciones;
 
     // Timer
@@ -69,18 +69,24 @@ public class TemporizadorActivity extends AppCompatActivity {
         progressBarTimer = findViewById(R.id.progressBarTimer);
         tvFrase = findViewById(R.id.tvFrase);
         tvModoTitulo = findViewById(R.id.tvModoTitulo);
+        tvNombreActividad = findViewById(R.id.tvNombreActividadTimer); // NUEVO
         containerOpciones = findViewById(R.id.containerOpciones);
+
+        // Mostrar nombre de la actividad
+        if (actividadActual != null) {
+            tvNombreActividad.setText(actividadActual.getNombre());
+        }
 
         // Botones
         btnIniciar = findViewById(R.id.btnStart);
         btnPausar = findViewById(R.id.btnPause);
         btnFinalizarAhora = findViewById(R.id.btnFinalizarAhora);
-        btnReiniciar = findViewById(R.id.btnReiniciar); // Nuevo
-        btnBack = findViewById(R.id.btnBackTemporizador); // Nuevo
+        btnReiniciar = findViewById(R.id.btnReiniciar);
+        btnBack = findViewById(R.id.btnBackTemporizador);
 
         // 1) BLOQUEO INICIAL: No permitir iniciar si es 0
         btnIniciar.setEnabled(false);
-        btnIniciar.setAlpha(0.5f); // Visualmente deshabilitado
+        btnIniciar.setAlpha(0.5f);
 
         configurarEstiloPorTecnica();
         generarBotonesDuracion();
@@ -88,7 +94,7 @@ public class TemporizadorActivity extends AppCompatActivity {
         // Listeners
         btnIniciar.setOnClickListener(v -> iniciarTimer());
 
-        // 2) Lógica Pausar/Reanudar en el mismo botón
+        // 2) Lógica Pausar/Reanudar
         btnPausar.setOnClickListener(v -> togglePausaResume());
 
         btnFinalizarAhora.setOnClickListener(v -> {
@@ -201,7 +207,7 @@ public class TemporizadorActivity extends AppCompatActivity {
         crearYArrancarCountDown();
     }
 
-    // Método auxiliar para crear el timer (evita código duplicado)
+    // Método auxiliar para crear el timer
     private void crearYArrancarCountDown() {
         timer = new CountDownTimer(tiempoRestanteMillis, 100) {
             @Override
@@ -217,7 +223,7 @@ public class TemporizadorActivity extends AppCompatActivity {
                 progressBarTimer.setProgress(100);
                 tvTiempo.setText("00:00");
                 tvFrase.setText("¡Sesión completada!");
-                btnPausar.setVisibility(View.GONE); // Ocultar pausar al terminar
+                btnPausar.setVisibility(View.GONE);
                 guardarSesion();
             }
         }.start();
@@ -231,14 +237,14 @@ public class TemporizadorActivity extends AppCompatActivity {
             timerCorriendo = false;
 
             btnPausar.setText("REANUDAR");
-            btnPausar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50"))); // Verde para reanudar
+            btnPausar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50"))); // Verde
             tvFrase.setText("Tiempo pausado");
         } else {
             // REANUDAR
             crearYArrancarCountDown();
 
             btnPausar.setText("PAUSAR");
-            btnPausar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFB300"))); // Amarillo para pausar
+            btnPausar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFB300"))); // Amarillo
             tvFrase.setText("¡Sigue así!");
         }
     }
@@ -285,7 +291,7 @@ public class TemporizadorActivity extends AppCompatActivity {
                 actividadActual.setPorcentajeAvance(nuevoPorcentaje);
             }
 
-            Repositorio.getInstance().actualizarActividad(actividadActual);
+            RepositorioActividades.getInstance().actualizarActividad(actividadActual);
             Toast.makeText(this, "¡Excelente! Guardado.", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, ListaActividadesActivity.class);

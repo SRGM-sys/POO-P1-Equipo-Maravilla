@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.menuaplication.ui.menu.MainActivity;
 import com.example.menuaplication.R;
-import com.example.menuaplication.data.Repositorio; // <--- 1. NO OLVIDES ESTE IMPORT
+import com.example.menuaplication.data.RepositorioActividades; // <--- 1. NO OLVIDES ESTE IMPORT
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         // Al pasarle 'this', le damos el contexto para que encuentre
         // la carpeta de archivos y cargue los datos guardados.
         // -----------------------------------------------------------
-        Repositorio.getInstance(this);
+        RepositorioActividades.getInstance(this);
 
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override

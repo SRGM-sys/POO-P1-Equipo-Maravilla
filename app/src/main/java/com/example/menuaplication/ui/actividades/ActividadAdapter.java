@@ -1,4 +1,4 @@
-package com.example.menuaplication.ui;
+package com.example.menuaplication.ui.actividades;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -24,10 +23,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.model.Actividad;
-import com.example.menuaplication.model.ActividadAcademica;
-import com.example.menuaplication.model.Prioridad;
+import com.example.menuaplication.data.RepositorioActividades;
+import com.example.menuaplication.model.actividades.Actividad;
+import com.example.menuaplication.model.actividades.ActividadAcademica;
+import com.example.menuaplication.model.actividades.Prioridad;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -63,19 +64,29 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         String tipo = (actividad instanceof ActividadAcademica) ? "Académica" : "Personal";
         holder.tvTipo.setText(tipo);
 
+        // Icono según tipo (opcional, si los tienes definidos en el ViewHolder y layout)
+        // if (actividad instanceof ActividadAcademica) holder.imgIcono.setImageResource(R.drawable.ic_brain);
+        // else holder.imgIcono.setImageResource(R.drawable.ic_task);
+
         holder.progressBar.setProgress((int) actividad.getPorcentajeAvance());
         holder.tvPorcentaje.setText((int) actividad.getPorcentajeAvance() + "%");
 
-        // Estado y Colores
+        // LÓGICA DE ESTADO Y VENCIMIENTO
+        // Verificamos si la fecha de vencimiento es anterior a 'ahora' y si no está completada
+        boolean esVencida = actividad.getFechaVencimiento().isBefore(LocalDateTime.now()) && actividad.getPorcentajeAvance() < 100;
+
         if (actividad.getPorcentajeAvance() >= 100) {
             holder.tvEstado.setText("COMPLETADA");
-            holder.tvEstado.setTextColor(Color.parseColor("#4CAF50"));
+            holder.tvEstado.setTextColor(Color.parseColor("#4CAF50")); // Verde
+        } else if (esVencida) {
+            holder.tvEstado.setText("¡VENCIDA!");
+            holder.tvEstado.setTextColor(Color.parseColor("#D32F2F")); // Rojo oscuro
         } else if (actividad.getPorcentajeAvance() > 0) {
             holder.tvEstado.setText("EN PROGRESO");
-            holder.tvEstado.setTextColor(Color.parseColor("#FF9800"));
+            holder.tvEstado.setTextColor(Color.parseColor("#FF9800")); // Naranja
         } else {
             holder.tvEstado.setText("PENDIENTE");
-            holder.tvEstado.setTextColor(Color.parseColor("#757575"));
+            holder.tvEstado.setTextColor(Color.parseColor("#757575")); // Gris
         }
 
         // Prioridad
@@ -94,6 +105,12 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM HH:mm");
         if (actividad.getFechaVencimiento() != null) {
             holder.tvFecha.setText("Vence: " + actividad.getFechaVencimiento().format(formatter));
+            // Opcional: poner la fecha en rojo también si está vencida
+            if (esVencida) {
+                holder.tvFecha.setTextColor(Color.parseColor("#D32F2F"));
+            } else {
+                holder.tvFecha.setTextColor(Color.parseColor("#757575"));
+            }
         } else {
             holder.tvFecha.setText("Sin fecha");
         }
@@ -106,7 +123,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             vCtx.startActivity(intent);
         });
 
-        // Click largo -> Opciones (usando el contexto de la vista)
+        // Click largo -> Opciones
         holder.itemView.setOnLongClickListener(v -> {
             mostrarOpciones(actividad, holder.getAdapterPosition(), v.getContext());
             return true;
@@ -130,9 +147,8 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         builder.show();
     }
 
-    // ---------------------------
-    // DIALOG: Registrar Avance
-    // ---------------------------
+    // --- DIALOGOS (Mismos que tenías, sin cambios lógicos) ---
+
     private void mostrarDialogoAvance(Actividad actividad, int position, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
         if (!(ctx instanceof Activity)) return;
@@ -170,7 +186,6 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
                         }
 
                         dialog.dismiss();
-                        // Pasamos al diálogo de confirmación
                         mostrarConfirmacionAvance(actividad, position, nuevoAvance, callerContext);
 
                     } catch (NumberFormatException nfe) {
@@ -187,9 +202,6 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         }
     }
 
-    // ---------------------------
-    // DIALOG: Confirmación Avance
-    // ---------------------------
     private void mostrarConfirmacionAvance(Actividad actividad, int position, double nuevoAvance, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
         if (!(ctx instanceof Activity)) return;
@@ -214,6 +226,9 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             if (btnSi != null) {
                 btnSi.setOnClickListener(v -> {
                     actividad.setPorcentajeAvance(nuevoAvance);
+                    // IMPORTANTE: Guardar en repositorio para que persista
+                    RepositorioActividades.getInstance().actualizarActividad(actividad);
+
                     if (position >= 0 && position < actividades.size()) {
                         notifyItemChanged(position);
                     } else {
@@ -232,9 +247,6 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         }
     }
 
-    // ---------------------------
-    // DIALOG: Eliminar Actividad
-    // ---------------------------
     private void mostrarDialogoEliminar(Actividad actividad, int position, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
         if (!(ctx instanceof Activity)) return;
@@ -255,6 +267,10 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
 
             if (btnEliminar != null) {
                 btnEliminar.setOnClickListener(v -> {
+                    // Primero eliminamos del repositorio (disco)
+                    RepositorioActividades.getInstance().eliminarActividad(actividad);
+
+                    // Luego actualizamos la lista visual
                     if (position >= 0 && position < actividades.size()) {
                         actividades.remove(position);
                         notifyItemRemoved(position);
@@ -289,6 +305,8 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvNombre, tvTipo, tvPrioridad, tvEstado, tvPorcentaje, tvFecha;
         ProgressBar progressBar;
+        // Si tienes iconos en tu XML item_actividad, descomenta esto:
+        // ImageView imgIcono;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -299,6 +317,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             tvPorcentaje = itemView.findViewById(R.id.tvPorcentaje);
             tvFecha = itemView.findViewById(R.id.tvFecha);
             progressBar = itemView.findViewById(R.id.progressBarAvance);
+            // imgIcono = itemView.findViewById(R.id.imgItemIcono); // Asegúrate que el ID exista en tu XML
         }
     }
 }
