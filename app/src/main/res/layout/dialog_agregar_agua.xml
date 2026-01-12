@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="300dp"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="20dp"
+    app:cardCornerRadius="24dp"
     app:cardBackgroundColor="@color/white">
 
     <LinearLayout
@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Registrar Toma"
-            android:textColor="@color/hydro_text_primary"
+            android:textColor="@color/hydro_primary_dark"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_gravity="center"/>
@@ -26,33 +26,42 @@
             android:layout_height="wrap_content"
             android:text="Cantidad (ml):"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"/>
+            android:layout_marginBottom="8dp"
+            android:textSize="14sp"
+            android:textColor="@color/hydro_text_secondary"/>
 
         <EditText
             android:id="@+id/etCantidadAgua"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:hint="Ej: 250"
             android:inputType="number"
             android:maxLength="7"
-            android:backgroundTint="@color/hydro_primary"/>
+            android:background="@drawable/fondo_dialogo_redondo"
+            android:backgroundTint="@color/hydro_input_bg"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hora:"
-            android:layout_marginTop="12dp"
-            android:textColor="@color/black"/>
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="14sp"
+            android:textColor="@color/hydro_text_secondary"/>
 
         <TextView
             android:id="@+id/tvSeleccionarHora"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:text="-- : --"
-            android:textSize="18sp"
-            android:padding="8dp"
-            android:gravity="center"
-            android:background="#F5F5F5"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/fondo_dialogo_redondo"
+            android:backgroundTint="@color/hydro_input_bg"
             android:clickable="true"
             android:focusable="true"/>
 
@@ -60,22 +69,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:gravity="end">
+            android:weightSum="2">
 
             <Button
                 android:id="@+id/btnCancelarAgua"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Cancelar"
-                android:backgroundTint="#B0BEC5"
-                android:layout_marginEnd="8dp"/>
+                android:textColor="@color/hydro_text_secondary"
+                android:backgroundTint="#F0F0F0"
+                app:cornerRadius="12dp"
+                android:layout_marginEnd="8dp"
+                style="?android:attr/borderlessButtonStyle"/>
 
             <Button
                 android:id="@+id/btnGuardarAgua"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Guardar"
-                android:backgroundTint="#2E7D32"/>
+                android:textColor="@color/white"
+                android:backgroundTint="@color/hydro_primary"
+                app:cornerRadius="12dp"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

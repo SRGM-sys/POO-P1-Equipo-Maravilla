@@ -1,216 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/hydro_background"
-    android:fillViewport="true"
-    tools:context=".ui.hidratacion.ControlHidratacionActivity">
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp">
+
+        <ImageButton
+            android:id="@+id/btnVolver"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="@color/hydro_text_secondary"
+            android:contentDescription="Volver" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Control de Hidratación"
-            android:textColor="@color/hydro_text_primary"
-            android:textSize="24sp"
+            android:layout_weight="1"
+            android:text="Hidratación"
+            android:textColor="@color/hydro_primary_dark"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:gravity="center" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardFecha"
+        <View android:layout_width="40dp" android:layout_height="40dp"/>
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardFecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="2dp"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="8dp"
+            android:gravity="center">
+
+
+            <TextView
+                android:id="@+id/tvFechaSeleccionada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="21 de Enero del 2026"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/white"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/hydro_card_bg"
-            android:layout_marginBottom="20dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="24dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Seleccionar Fecha:"
-                    android:textColor="#424242"
-                    android:textSize="14sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/tvFechaSeleccionada"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/fondo_dialogo_redondo"
-                    android:backgroundTint="#F5F5F5"
-                    android:padding="12dp"
-                    android:text="19/01/2026"
-                    android:textColor="@color/black"
-                    android:drawableEnd="@drawable/ic_task"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/hydro_card_bg"
-            android:layout_marginBottom="20dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp">
-
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
                 <ProgressBar
                     android:id="@+id/progressBarHidratacion"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    style="?android:attr/progressBarStyleHorizontal"
                     android:progressDrawable="@drawable/circular_progress"
-                    android:progress="40"
-                    android:max="100"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
+                    android:progress="0"
+                    android:max="100" />
                 <TextView
                     android:id="@+id/tvPorcentaje"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="40%"
-                    android:textColor="@color/hydro_primary"
-                    android:textSize="20sp"
+                    android:text="0%"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/progressBarHidratacion"
-                    app:layout_constraintEnd_toEndOf="@+id/progressBarHidratacion"
-                    app:layout_constraintTop_toTopOf="@+id/progressBarHidratacion"
-                    app:layout_constraintBottom_toBottomOf="@+id/progressBarHidratacion"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
-                    android:layout_marginStart="24dp"
-                    app:layout_constraintStart_toEndOf="@+id/progressBarHidratacion"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Meta diaria:"
-                        android:textColor="@color/hydro_text_secondary"/>
-
-                    <TextView
-                        android:id="@+id/tvMetaDiaria"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2000 ml"
-                        android:textColor="@color/hydro_primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnEstablecerMeta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Establecer Meta"
-                        android:backgroundTint="@color/hydro_primary"
-                        android:textColor="@color/white"
-                        android:textAllCaps="false"
-                        app:cornerRadius="20dp"/>
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/hydro_card_bg"
-            android:layout_marginBottom="20dp">
+                    android:textColor="@color/hydro_primary"
+                    android:layout_gravity="center" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:gravity="center_horizontal"
+                android:layout_marginStart="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Registros del Día"
-                    android:textColor="#212121"
-                    android:textSize="16sp"
+                    android:text="Meta Diaria"
+                    android:textColor="@color/hydro_text_secondary"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvMetaDiaria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4000 ml"
+                    android:textColor="@color/hydro_primary_dark"
+                    android:textSize="28sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginVertical="4dp"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRegistrosAgua"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/item_registro_agua"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#EEEEEE"
-                    android:layout_marginVertical="12dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="end">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total consumido: "
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:id="@+id/tvTotalConsumido"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="800 ml"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
+                <Button
+                    android:id="@+id/btnEstablecerMeta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Editar Meta"
+                    android:textSize="12sp"
+                    android:backgroundTint="#E3F2FD"
+                    android:textColor="@color/hydro_primary"
+                    app:cornerRadius="18dp"
+                    android:stateListAnimator="@null"
+                    android:elevation="0dp"/>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRegistrarAgua"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/white"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Registrar nueva toma de agua"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:cornerRadius="12dp"
-            android:backgroundTint="#2E7D32"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    </LinearLayout>
-</ScrollView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Historial de hoy"
+                    android:textColor="@color/hydro_primary_dark"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tvTotalConsumido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 ml"
+                    android:textColor="@color/hydro_primary"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRegistrosAgua"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
+                tools:listitem="@layout/item_registro_agua"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btnRegistrarAgua"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Registrar Ingesta"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/hydro_accent_green"
+        app:cornerRadius="16dp"/>
+
+</LinearLayout>

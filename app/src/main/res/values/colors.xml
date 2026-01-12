@@ -7,6 +7,12 @@
     <color name="text_secondary">#7F8C8D</color>
     <color name="exit_red">#E57373</color>
 
-    <color name="hydro_background">#E3F2FD</color> <color name="hydro_card_bg">#FFFFFF</color>     <color name="hydro_primary">#1976D2</color>     <color name="hydro_text_primary">#0D47A1</color> <color name="hydro_text_secondary">#546E7A</color>
-    <color name="hydro_list_item_bg">#E1F5FE</color>
+    <color name="hydro_background">#F5F7FA</color>
+    <color name="hydro_card_bg">#FFFFFF</color>
+    <color name="hydro_primary">#2196F3</color>
+    <color name="hydro_primary_dark">#1976D2</color>
+    <color name="hydro_text_secondary">#78909C</color>
+    <color name="hydro_accent_green">#4CAF50</color>
+    <color name="hydro_input_bg">#F1F3F4</color>
 </resources>
+

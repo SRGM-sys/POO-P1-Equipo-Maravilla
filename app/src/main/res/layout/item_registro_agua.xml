@@ -4,40 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="12dp"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="@color/hydro_list_item_bg"> <LinearLayout
+    app:cardBackgroundColor="@color/hydro_input_bg"> <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp">
 
     <TextView
         android:id="@+id/tvCantidadItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="250 ml"
-        android:textColor="@color/hydro_text_primary"
+        android:textColor="@color/hydro_primary_dark"
         android:textStyle="bold"
         android:textSize="16sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" - "
-        android:textColor="@color/hydro_text_primary"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:text=" • "
+        android:textColor="@color/hydro_text_secondary"
+        android:textSize="16sp"
+        android:paddingHorizontal="8dp"/>
 
     <TextView
         android:id="@+id/tvHoraItem"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         tools:text="10:30 AM"
         android:textColor="@color/hydro_text_secondary"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:textSize="14sp"/>
 
 </LinearLayout>
 </androidx.cardview.widget.CardView>
