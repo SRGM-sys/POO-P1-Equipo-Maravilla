@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    tools:context=".ui.sostenibilidad.ResumenSostenibilidadActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:id="@+id/tv_titulo_resumen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tu Impacto Semanal"
+            android:textColor="@color/primary_green"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_rango_fechas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(10/12/2025 - 16/12/2025)"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_titulo_resumen"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_frecuencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_rango_fechas">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Frecuencia de Acciones"
+                    android:textColor="@color/primary_green"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="16dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:text="Acción" android:textStyle="bold" android:textColor="@color/text_dark"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.6" android:text="Veces" android:gravity="center" android:textStyle="bold" android:textColor="@color/text_dark"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Estado" android:gravity="center" android:textStyle="bold" android:textColor="@color/text_dark"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" android:layout_marginVertical="12dp"/>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:text="Transporte Sostenible" android:textColor="@color/text_secondary" android:textSize="13sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.6" android:text="5/7" android:gravity="center" android:textStyle="bold" android:textColor="@color/text_dark"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="¡Genial!" android:background="@drawable/bg_boton_opcion" android:backgroundTint="@color/primary_green" android:textColor="@color/white" android:padding="4dp" android:gravity="center" android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:text="Evité Impresiones" android:textColor="@color/text_secondary" android:textSize="13sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.6" android:text="7/7" android:gravity="center" android:textStyle="bold" android:textColor="@color/text_dark"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Excelente" android:background="@drawable/bg_boton_opcion" android:backgroundTint="@color/primary_green" android:textColor="@color/white" android:padding="4dp" android:gravity="center" android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:text="Sin Envases" android:textColor="@color/text_secondary" android:textSize="13sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.6" android:text="4/7" android:gravity="center" android:textStyle="bold" android:textColor="@color/text_dark"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Mejorar" android:background="@drawable/bg_boton_opcion" android:backgroundTint="#EF6C00" android:textColor="@color/white" android:padding="4dp" android:gravity="center" android:textSize="10sp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_analisis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/cv_frecuencia">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Análisis Ecológico"
+                    android:textColor="@color/primary_green"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="• Días con al menos 1 acción sostenible: 7 de 7 (100%)"
+                    android:textColor="@color/text_dark"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="• Días perfectos: 2 de 7 (28%)"
+                    android:textColor="@color/text_dark"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/btn_volver_inicio"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="VOLVER AL INICIO"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/primary_green"
+            app:cornerRadius="30dp"
+            android:layout_margin="24dp"
+            app:layout_constraintTop_toBottomOf="@id/cv_analisis"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

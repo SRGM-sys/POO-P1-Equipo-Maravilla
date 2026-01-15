@@ -36,7 +36,7 @@
             android:name=".ui.actividades.EditarActividadActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
+        <activity android:name=".ui.sostenibilidad.ResumenSostenibilidadActivity" />
     </application>
 
 </manifest>
