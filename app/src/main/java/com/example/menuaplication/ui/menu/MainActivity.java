@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     });
         }
-        
+
         /* Si tienes las clase Juego, descomenta esto:
         if (cardGame != null) {
             cardGame.setOnClickListener(v -> startActivity(new Intent(this, JuegoMemoriaActivity.class)));

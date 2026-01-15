@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.menuaplication.R;
 import com.example.menuaplication.model.sostenibilidad.RegistroSostenibilidad;
 import java.time.LocalDate;
+import com.example.menuaplication.ui.sostenibilidad.ResumenSostenibilidadActivity;
 
 public class RegistroSostenibilidadActivity extends AppCompatActivity {
 
