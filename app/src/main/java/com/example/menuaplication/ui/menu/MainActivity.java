@@ -13,7 +13,7 @@ import com.example.menuaplication.R;
 import com.example.menuaplication.ui.actividades.ListaActividadesActivity;
 import com.example.menuaplication.ui.hidratacion.ControlHidratacionActivity;
 import com.google.android.material.button.MaterialButton;
-
+import com.example.menuaplication.ui.sostenibilidad.RegistroSostenibilidadActivity;
 public class MainActivity extends AppCompatActivity {
     private TextView btnCreditos;
     private CardView cardActivities, cardHydration, cardEco, cardGame;
@@ -60,11 +60,15 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        /* Si tienes las clases de Eco y Juego, descomenta esto:
-
+        // --- PARTE ECO ---
         if (cardEco != null) {
-            cardEco.setOnClickListener(v -> startActivity(new Intent(this, RegistroSostenibilidadActivity.class)));
+    cardEco.setOnClickListener(v -> {
+        Intent intent = new Intent(MainActivity.this, RegistroSostenibilidadActivity.class);
+        startActivity(intent);
+    });
         }
+        
+        /* Si tienes las clase Juego, descomenta esto:
         if (cardGame != null) {
             cardGame.setOnClickListener(v -> startActivity(new Intent(this, JuegoMemoriaActivity.class)));
         }
