@@ -43,7 +43,7 @@ public class ControlHidratacionActivity extends AppCompatActivity {
     // Datos
     private RegistroAguaAdapter adapter;
     private String fechaActualString;
-    private int metaDiaria = 4000;
+    private int metaDiaria = 2000;
     private Map<String, List<RegistroAgua>> baseDeDatosLocal;
 
     @Override
@@ -115,6 +115,7 @@ public class ControlHidratacionActivity extends AppCompatActivity {
 
         int porcentaje = 0;
         if (metaDiaria > 0) porcentaje = (totalMl * 100) / metaDiaria;
+        if (porcentaje > 100) porcentaje = 100;
 
         progressBar.setProgress(Math.min(porcentaje, 100));
         tvPorcentaje.setText(porcentaje + "%");
