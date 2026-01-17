@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@color/white"
-    android:padding="24dp">
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:gravity="center"
+android:background="@color/white"
+android:padding="24dp">
 
     <ImageView
         android:id="@+id/iv_logo_memoria"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_lumen"
-        android:layout_marginBottom="32dp"/>
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_lumen" />
 
     <TextView
         android:id="@+id/tv_titulo_juego"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="Entrenamiento de Memoria"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:textColor="@color/text_dark"
-        android:layout_marginBottom="48dp"/>
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_instrucciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Encuentra los 8 pares en el tablero.\n¡Ejercita tu mente!"
+        android:textAlignment="center"
+        android:textColor="@color/text_dark"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_iniciar_juego"
