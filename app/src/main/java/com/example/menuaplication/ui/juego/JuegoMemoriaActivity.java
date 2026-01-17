@@ -1,7 +1,10 @@
 package com.example.menuaplication.ui.juego;
 
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Handler; // Importante para el tiempo de espera al voltear cartas
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,138 +13,150 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menuaplication.R;
 import com.example.menuaplication.model.juego.TarjetaMemoria;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class JuegoMemoriaActivity extends AppCompatActivity {
+// 1. AQUI ARREGLAMOS EL PRIMER ERROR ROJO (Implementar la interfaz)
+public class JuegoMemoriaActivity extends AppCompatActivity implements AdaptadorMemoria.OnCartaClickListener {
 
+    // === Variables de la Pantalla (Vistas) ===
+    private TextView tvIntentos;
+    private TextView tvPares;
+    private ImageButton btnVolver;
     private RecyclerView rvTablero;
-    private MaterialButton btnReiniciar;
-    private AdaptadorMemoria adaptador;
-    private List<TarjetaMemoria> listaTarjetas;
 
-    // Variables de lógica de juego
+    // === Variables del Juego ===
+    private AdaptadorMemoria adaptador;
+    private List<TarjetaMemoria> listaCartas;
+    private int contadorIntentos = 0;
+    private int contadorPares = 0;
+    private final int TOTAL_PARES = 8; // Ajusta esto según cuantas cartas generes
+
+    // Variables para controlar la lógica de pares
+    private TarjetaMemoria primeraCarta = null;
     private int posicionPrimeraCarta = -1;
-    private int posicionSegundaCarta = -1;
-    private boolean turnoBloqueado = false; // Evita clics rápidos mientras se valida
+    private boolean turnoBloqueado = false; // Para evitar que toquen mientras se voltean cartas
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_juego_memoria);
-
-        if (getSupportActionBar() != null) getSupportActionBar().hide();
+        setContentView(R.layout.activity_juego_memoria); // Asegúrate que este sea el nombre de tu XML
 
         inicializarVistas();
-        iniciarJuego();
+        configurarTablero();
+
+        // Configurar botón salir
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void inicializarVistas() {
-        rvTablero = findViewById(R.id.rv_tablero_juego);
-        btnReiniciar = findViewById(R.id.btn_reiniciar_juego);
-
-        // Configurar Grid 4x4
-        rvTablero.setLayoutManager(new GridLayoutManager(this, 4));
-
-        btnReiniciar.setOnClickListener(v -> iniciarJuego());
+        tvIntentos = findViewById(R.id.tv_intentos);
+        tvPares = findViewById(R.id.tv_pares);
+        btnVolver = findViewById(R.id.btn_volver_menu);
+        rvTablero = findViewById(R.id.rv_tablero_memoria);
     }
 
-    private void iniciarJuego() {
-        listaTarjetas = generarTarjetas();
-        Collections.shuffle(listaTarjetas);
+    private void configurarTablero() {
+        rvTablero.setLayoutManager(new GridLayoutManager(this, 4));
 
-        posicionPrimeraCarta = -1;
-        posicionSegundaCarta = -1;
-        turnoBloqueado = false;
+        listaCartas = generarCartas();
 
-        adaptador = new AdaptadorMemoria(listaTarjetas, this::procesarClicCarta);
+        // 2. AQUI ARREGLAMOS EL SEGUNDO ERROR ROJO (El 'this' ahora funciona)
+        adaptador = new AdaptadorMemoria(listaCartas, this);
         rvTablero.setAdapter(adaptador);
     }
 
-    private List<TarjetaMemoria> generarTarjetas() {
-        List<TarjetaMemoria> cartas = new ArrayList<>();
-        // Usamos tus iconos actuales para formar los pares
-        int[] imagenes = {
-                R.drawable.ic_leaf,
-                R.drawable.ic_water,
-                R.drawable.ic_recycle,
-                R.drawable.ic_bus,
-                R.drawable.ic_brain,
-                R.drawable.ic_task,
-                R.drawable.ic_lumen,
-        };
-
-        // Creamos pares (2 de cada imagen)
-        int idCount = 0;
-        for (int img : imagenes) {
-            cartas.add(new TarjetaMemoria(idCount++, img));
-            cartas.add(new TarjetaMemoria(idCount++, img));
-        }
-        return cartas;
-    }
-
-    private void procesarClicCarta(int posicion) {
+    // === LÓGICA DE JUEGO ===
+    // (Este método se activa AUTOMÁTICAMENTE cuando tocan una carta)
+    @Override
+    public void onCartaClick(int posicion) {
+        // Si el turno está bloqueado (esperando a que se volteen) o la carta ya está lista, ignoramos
         if (turnoBloqueado) return;
 
-        TarjetaMemoria cartaClickeada = listaTarjetas.get(posicion);
+        TarjetaMemoria cartaSeleccionada = listaCartas.get(posicion);
+        if (cartaSeleccionada.isEstaDescubierta() || cartaSeleccionada.isEstaEmparejada()) {
+            return;
+        }
 
-        // Si ya está descubierta o emparejada, ignorar
-        if (cartaClickeada.isEstaDescubierta() || cartaClickeada.isEstaEmparejada()) return;
+        // 1. Voltear la carta seleccionada
+        cartaSeleccionada.setEstaDescubierta(true);
+        adaptador.notifyItemChanged(posicion);
 
-        // Lógica de selección
-        if (posicionPrimeraCarta == -1) {
-            // Primer clic
+        // 2. Lógica de comparación
+        if (primeraCarta == null) {
+            // Es la primera carta que levanta
+            primeraCarta = cartaSeleccionada;
             posicionPrimeraCarta = posicion;
-            cartaClickeada.setEstaDescubierta(true);
-            adaptador.notifyItemChanged(posicion);
         } else {
-            // Segundo clic
-            if (posicion == posicionPrimeraCarta) return; // Clic en la misma carta
-
-            posicionSegundaCarta = posicion;
-            cartaClickeada.setEstaDescubierta(true);
-            adaptador.notifyItemChanged(posicion);
-
-            turnoBloqueado = true; // Bloquear inputs
-            verificarPareja();
+            // Es la segunda carta, comparamos
+            compararCartas(primeraCarta, cartaSeleccionada, posicion);
         }
     }
 
-    private void verificarPareja() {
-        TarjetaMemoria carta1 = listaTarjetas.get(posicionPrimeraCarta);
-        TarjetaMemoria carta2 = listaTarjetas.get(posicionSegundaCarta);
+    private void compararCartas(TarjetaMemoria carta1, TarjetaMemoria carta2, int pos2) {
+        turnoBloqueado = true; // Bloqueamos toques extra
+        contadorIntentos++;
+        tvIntentos.setText("Intentos: " + contadorIntentos);
 
-        if (carta1.getImagenRecurso() == carta2.getImagenRecurso()) {
-            // ¡Coincidencia!
+        if (carta1.getId() == carta2.getId()) {
+            // ACIERTO: Son iguales
             carta1.setEstaEmparejada(true);
             carta2.setEstaEmparejada(true);
-            resetearSeleccion();
-            verificarVictoria();
+
+            contadorPares++;
+            tvPares.setText("Pares: " + contadorPares + "/" + TOTAL_PARES);
+
+            primeraCarta = null;
+            turnoBloqueado = false; // Desbloqueamos
+
+            if (contadorPares == TOTAL_PARES) {
+                Toast.makeText(this, "¡GANASTE! 🎉", Toast.LENGTH_SHORT).show();
+            }
+
         } else {
-            // No coinciden: Esperar y voltear
-            new Handler().postDelayed(() -> {
-                carta1.setEstaDescubierta(false);
-                carta2.setEstaDescubierta(false);
-                adaptador.notifyItemChanged(posicionPrimeraCarta);
-                adaptador.notifyItemChanged(posicionSegundaCarta);
-                resetearSeleccion();
-            }, 1000); // 1 segundo de espera
+            // FALLO: Son diferentes
+            // Esperamos 1 segundo y las volteamos de nuevo
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    carta1.setEstaDescubierta(false);
+                    carta2.setEstaDescubierta(false);
+
+                    // Actualizamos solo esas dos cartas
+                    adaptador.notifyItemChanged(posicionPrimeraCarta);
+                    adaptador.notifyItemChanged(pos2);
+
+                    primeraCarta = null;
+                    turnoBloqueado = false; // Desbloqueamos
+                }
+            }, 1000);
         }
     }
 
-    private void resetearSeleccion() {
-        posicionPrimeraCarta = -1;
-        posicionSegundaCarta = -1;
-        turnoBloqueado = false;
-    }
+    // === GENERADOR DE CARTAS (Ejemplo Básico) ===
+    private List<TarjetaMemoria> generarCartas() {
+        List<TarjetaMemoria> cartas = new ArrayList<>();
 
-    private void verificarVictoria() {
-        for (TarjetaMemoria t : listaTarjetas) {
-            if (!t.isEstaEmparejada()) return;
-        }
-        Toast.makeText(this, "¡Felicidades! Completaste el Eco Reto", Toast.LENGTH_SHORT).show();
+        // Aquí deberías añadir tus cartas reales. Ejemplo:
+        // Añadimos pares (Id 1, Imagen X) dos veces
+        cartas.add(new TarjetaMemoria(1, R.drawable.ic_lumen));
+        cartas.add(new TarjetaMemoria(1, R.drawable.ic_lumen));
+        cartas.add(new TarjetaMemoria(2, R.drawable.ic_water));
+        cartas.add(new TarjetaMemoria(2, R.drawable.ic_water));
+        cartas.add(new TarjetaMemoria(3, R.drawable.ic_leaf));
+        cartas.add(new TarjetaMemoria(3, R.drawable.ic_leaf));
+        cartas.add(new TarjetaMemoria(4, R.drawable.ic_task));
+        cartas.add(new TarjetaMemoria(4, R.drawable.ic_task));
+        // ... añade hasta tener 16 cartas (8 pares)
+
+        Collections.shuffle(cartas); // Barajar
+        return cartas;
     }
 }
