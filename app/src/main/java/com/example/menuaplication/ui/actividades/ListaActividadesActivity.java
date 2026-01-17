@@ -32,12 +32,12 @@ import java.util.List;
  * <ul>
  * <li>Mostrar el RecyclerView con el {@link ActividadAdapter}.</li>
  * <li>Filtrar actividades por tipo (Todas, Académicas, Personales).</li>
- * <li>Ordenar actividades (Nombre, Fecha, Avance).</li>
+ * <li>Ordenar actividades por Nombre, Fecha (Asc/Desc) y Avance (Asc/Desc).</li>
  * <li>Filtrar automáticamente las actividades vencidas para que no aparezcan.</li>
  * </ul>
  *
  * @author José Paladines
- * @version 1.0
+ * @version 1.1
  */
 public class ListaActividadesActivity extends AppCompatActivity {
 
@@ -68,7 +68,16 @@ public class ListaActividadesActivity extends AppCompatActivity {
         filtroAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFiltro.setAdapter(filtroAdapter);
 
-        ArrayAdapter<String> ordenAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_custom, new String[]{"Nombre (A-Z)", "Vencimiento", "Avance"});
+        // MODIFICADO: Opciones de ordenamiento expandidas
+        String[] opcionesOrden = {
+                "Nombre (A-Z)",
+                "Fecha V. (Asc)",
+                "Fecha V. (Desc)",
+                "Avance (Asc)",
+                "Avance (Desc)"
+        };
+
+        ArrayAdapter<String> ordenAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_custom, opcionesOrden);
         ordenAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOrden.setAdapter(ordenAdapter);
         // ----------------------------------------------------------
@@ -106,14 +115,14 @@ public class ListaActividadesActivity extends AppCompatActivity {
 
     /**
      * Obtiene la lista completa de actividades, aplica las reglas de negocio
-     * (eliminar vencidas, filtrar por tipo) y ordena los resultados.
+     * (eliminar vencidas, filtrar por tipo) y ordena los resultados según la selección.
      */
     private void refrescarLista() {
         List<Actividad> todas = RepositorioActividades.getInstance().getListaActividades();
         List<Actividad> filtradas = new ArrayList<>();
         LocalDateTime ahora = LocalDateTime.now();
 
-        // 1. Filtro
+        // 1. Filtro de Tipo y Vencimiento
         String filtro = spinnerFiltro.getSelectedItem().toString();
 
         for (Actividad a : todas) {
@@ -134,14 +143,27 @@ public class ListaActividadesActivity extends AppCompatActivity {
             }
         }
 
-        // 2. Ordenamiento
+        // 2. Ordenamiento Expandido
         String orden = spinnerOrden.getSelectedItem().toString();
-        if (orden.contains("Nombre")) {
+
+        if (orden.contains("Nombre (A-Z)")) {
+            // Nombre A-Z
             Collections.sort(filtradas, Comparator.comparing(Actividad::getNombre));
-        } else if (orden.contains("Vencimiento")) {
+
+        } else if (orden.equals("Fecha V. (Asc)")) {
+            // Lo más cercano primero (Hoy -> Mañana)
             Collections.sort(filtradas, (a, b) -> a.getFechaVencimiento().compareTo(b.getFechaVencimiento()));
-        } else if (orden.contains("Avance")) {
-            // De mayor a menor avance
+
+        } else if (orden.equals("Fecha V. (Desc)")) {
+            // Lo más lejano primero (El próximo mes -> Hoy)
+            Collections.sort(filtradas, (a, b) -> b.getFechaVencimiento().compareTo(a.getFechaVencimiento()));
+
+        } else if (orden.equals("Avance (Asc)")) {
+            // De menor a mayor avance (0% -> 100%)
+            Collections.sort(filtradas, (a, b) -> Double.compare(a.getPorcentajeAvance(), b.getPorcentajeAvance()));
+
+        } else if (orden.equals("Avance (Desc)")) {
+            // De mayor a menor avance (100% -> 0%)
             Collections.sort(filtradas, (a, b) -> Double.compare(b.getPorcentajeAvance(), a.getPorcentajeAvance()));
         }
 
