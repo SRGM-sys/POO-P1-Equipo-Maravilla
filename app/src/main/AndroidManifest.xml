@@ -28,6 +28,8 @@
             android:name=".ui.juego.InicioJuegoActivity"
             android:exported="false" />
 
+        <activity android:name=".ui.juego.JuegoMemoriaActivity" />
+
         <activity
             android:name=".ui.menu.MainActivity"
             android:exported="false"></activity>
