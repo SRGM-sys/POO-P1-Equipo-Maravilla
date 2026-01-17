@@ -30,7 +30,7 @@
         android:layout_height="60dp"
         android:text="JUGAR AHORA"
         android:textSize="18sp"
-        android:backgroundTint="@color/primary_blue"
+        android:backgroundTint="@color/game_accent"
         android:textColor="@color/white"/>
 
 </LinearLayout>

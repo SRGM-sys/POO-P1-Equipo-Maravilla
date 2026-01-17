@@ -1,53 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
-    tools:context=".ui.juego.JuegoMemoriaActivity">
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <View
-        android:id="@+id/view_header_game"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/game_accent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_titulo_juego"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eco Memoria"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/view_header_game"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view_header_game" />
+        android:orientation="vertical"
+        android:background="@color/game_accent"
+        android:padding="16dp"
+        android:elevation="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <ImageButton
+                android:id="@+id/btn_volver_menu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_revert"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Regresar"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/tv_titulo_juego"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="JUEGO DE MEMORIA"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_intentos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Intentos: 0"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginEnd="32dp"/>
+
+            <TextView
+                android:id="@+id/tv_pares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pares: 0/8"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_tablero_juego"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/rv_tablero_memoria"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_reiniciar_juego"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_header_game" />
+        android:padding="4dp"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_reiniciar_juego"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/game_accent"
-        android:text="Reiniciar Partida"
-        android:textColor="@color/white"
-        app:cornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
