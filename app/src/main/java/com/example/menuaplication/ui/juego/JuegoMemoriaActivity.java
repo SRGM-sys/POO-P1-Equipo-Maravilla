@@ -72,7 +72,6 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
                 R.drawable.ic_brain,
                 R.drawable.ic_task,
                 R.drawable.ic_lumen,
-                R.drawable.ic_logout // Metáfora: "Salida" de la contaminación
         };
 
         // Creamos pares (2 de cada imagen)

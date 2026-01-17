@@ -179,6 +179,7 @@ public class ControlHidratacionActivity extends AppCompatActivity {
 
         int porcentaje = 0;
         if (metaDelDiaActual > 0) porcentaje = (totalMl * 100) / metaDelDiaActual;
+        if (porcentaje > 100) porcentaje = 100;
 
         // La barra se llena hasta 100, aunque el porcentaje texto puede ser mayor
         progressBar.setProgress(Math.min(porcentaje, 100));

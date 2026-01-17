@@ -158,16 +158,33 @@ public class RepositorioHidratacion {
     private void cargarDesdeArchivo() {
         File archivo = new File(context.getExternalFilesDir(null), NOMBRE_ARCHIVO);
         if (archivo.exists()) {
+            // SI EL ARCHIVO EXISTE: CARGAMOS LOS DATOS GUARDADOS
+
             try (FileInputStream fis = new FileInputStream(archivo);
                  ObjectInputStream ois = new ObjectInputStream(fis)) {
-                // Leemos en el MISMO orden que guardamos
                 historialAgua = (Map<String, List<RegistroAgua>>) ois.readObject();
                 metasDiarias = (Map<String, Integer>) ois.readObject();
             } catch (Exception e) {
-                // Si falla, iniciamos vacíos
                 historialAgua = new HashMap<>();
                 metasDiarias = new HashMap<>();
             }
         }
+        else{
+            inicializarDatosPrueba();
+        }
+    }
+
+    /*
+     * Método para inicializar 2 registros de agua el 19 de Enero
+     */
+    private void inicializarDatosPrueba() {
+        List<RegistroAgua> listaEnero19 = new ArrayList<>();
+        listaEnero19.add(new RegistroAgua(250, "08:00 AM", "19/01/2026"));
+        listaEnero19.add(new RegistroAgua(500, "10:00 AM", "19/01/2026"));
+
+        historialAgua.put("19/01/2026", listaEnero19);
+
+        // Guardamos inmediatamente para que el archivo se cree
+        guardarEnArchivo();
     }
 }
