@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView;
 import com.example.menuaplication.R;
 import com.example.menuaplication.ui.actividades.ListaActividadesActivity;
 import com.example.menuaplication.ui.hidratacion.ControlHidratacionActivity;
+import com.example.menuaplication.ui.juego.InicioJuegoActivity;
 import com.google.android.material.button.MaterialButton;
 import com.example.menuaplication.ui.sostenibilidad.RegistroSostenibilidadActivity;
 import com.example.menuaplication.ui.juego.JuegoMemoriaActivity;
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         // --- PARTE JUEGO ---
         if (cardGame != null) {
             cardGame.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, JuegoMemoriaActivity.class);
+                Intent intent = new Intent(MainActivity.this, InicioJuegoActivity.class);
                 startActivity(intent);
             });
         }
