@@ -2,55 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/fondo_dialogo_redondo"
-    android:padding="24dp"
-    android:minWidth="300dp">
+    android:minWidth="300dp"
+    android:orientation="vertical"
+    android:padding="24dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirmación"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#2196F3"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:layout_marginBottom="16dp"/>
+        android:text="Confirmación"
+        android:textColor="@color/hydro_primary_dark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvMensajeConfirmacion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="¿Estás seguro...?"
-        android:textSize="16sp"
-        android:textColor="#424242"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:layout_marginBottom="24dp"/>
+        android:text="¿Estás seguro...?"
+        android:textColor="#424242"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnNoConfirmar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="No"
             android:backgroundTint="#E0E0E0"
-            android:textColor="#333333"
-            android:layout_marginEnd="8dp"/>
+            android:text="No"
+            android:textColor="#333333" />
 
         <Button
             android:id="@+id/btnSiConfirmar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
+            android:backgroundTint="@color/hydro_accent_green"
             android:text="Sí, Guardar"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFFFFF"
-            android:layout_marginStart="8dp"/>
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 </LinearLayout>

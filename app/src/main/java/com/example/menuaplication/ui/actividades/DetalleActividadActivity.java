@@ -31,7 +31,6 @@ import com.example.menuaplication.model.actividades.ActividadPersonal;
 import com.example.menuaplication.model.actividades.SesionEnfoque;
 import com.example.menuaplication.model.actividades.TecnicaEnfoque;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DetalleActividadActivity extends AppCompatActivity {
@@ -40,6 +39,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
 
     private Actividad actividad;
     private TextView tvTitulo, tvDesc, tvDetalleExtra, tvAvance, tvId, tvTiempoEst, tvTiempoInv;
+    private ImageView imgTipoIcono; // <-- 1. NUEVA VARIABLE
     private ProgressBar pbAvance;
     private LinearLayout layoutHistorialContainer;
     private Button btnPomodoro, btnDeepWork, btnAvance, btnEliminar, btnEditar;
@@ -62,6 +62,8 @@ public class DetalleActividadActivity extends AppCompatActivity {
         tvTiempoInv = findViewById(R.id.tvTiempoInvertido);
         pbAvance = findViewById(R.id.pbDetalle);
         layoutHistorialContainer = findViewById(R.id.layoutHistorialContainer);
+
+        imgTipoIcono = findViewById(R.id.imgTipoIcono); // <-- 2. VINCULAR
 
         btnPomodoro = findViewById(R.id.btnPomodoro);
         btnDeepWork = findViewById(R.id.btnDeepWork);
@@ -106,7 +108,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recargar datos por si volvimos del Temporizador (o de cualquier otro lado)
+        // Recargar datos por si volvimos del Temporizador
         for (Actividad a : RepositorioActividades.getInstance().getActividades()) {
             if (a.getId() == actividad.getId()) {
                 this.actividad = a;
@@ -128,15 +130,35 @@ public class DetalleActividadActivity extends AppCompatActivity {
         tvTiempoEst.setText("Estimado: " + actividad.getTiempoEstimadoMinutos() + " min");
         tvTiempoInv.setText("Invertido: " + actividad.getMinutosInvertidos() + " min");
 
-        // 3. Estado, Vencimiento y Barra de Progreso
+        // 3. Lógica del Icono <-- 3. LÓGICA DE ICONOS AÑADIDA
+        if (actividad instanceof ActividadPersonal) {
+            imgTipoIcono.setImageResource(R.drawable.ic_personal);
+        } else if (actividad instanceof ActividadAcademica) {
+            ActividadAcademica ac = (ActividadAcademica) actividad;
+            // Verifica que los nombres del Enum (TAREA, PROYECTO, etc.) coincidan con tu archivo TipoAcademica.java
+            switch (ac.getTipo()) {
+                case TAREA:
+                    imgTipoIcono.setImageResource(R.drawable.ic_tarea);
+                    break;
+                case PROYECTO:
+                    imgTipoIcono.setImageResource(R.drawable.ic_proyecto);
+                    break;
+                case EXAMEN:
+                    imgTipoIcono.setImageResource(R.drawable.ic_examen);
+                    break;
+                default:
+                    // Icono por defecto si agregas otro tipo en el futuro
+                    imgTipoIcono.setImageResource(R.drawable.ic_brain);
+                    break;
+            }
+        }
+
+        // 4. Estado y Barra de Progreso
         int porcentaje = (int) actividad.getPorcentajeAvance();
         pbAvance.setProgress(porcentaje);
 
         String estadoTexto = "";
         int colorEstado = Color.BLACK;
-
-        // VERIFICAR SI ESTÁ VENCIDA
-        boolean esVencida = actividad.getFechaVencimiento().isBefore(LocalDateTime.now()) && porcentaje < 100;
 
         if (porcentaje >= 100) {
             estadoTexto = "¡COMPLETADA!";
@@ -144,24 +166,24 @@ public class DetalleActividadActivity extends AppCompatActivity {
             btnAvance.setVisibility(View.GONE);
             btnPomodoro.setEnabled(false);
             btnDeepWork.setEnabled(false);
-        } else if (esVencida) {
-            estadoTexto = "¡VENCIDA!";
-            colorEstado = Color.parseColor("#D32F2F"); // Rojo
-            btnAvance.setVisibility(View.VISIBLE); // Dejamos visible por si quiere completarla tarde
         } else if (porcentaje > 0) {
             estadoTexto = "EN PROGRESO";
             colorEstado = Color.parseColor("#FF9800"); // Naranja
             btnAvance.setVisibility(View.VISIBLE);
+            btnPomodoro.setEnabled(true);
+            btnDeepWork.setEnabled(true);
         } else {
             estadoTexto = "PENDIENTE";
             colorEstado = Color.parseColor("#757575"); // Gris
             btnAvance.setVisibility(View.VISIBLE);
+            btnPomodoro.setEnabled(true);
+            btnDeepWork.setEnabled(true);
         }
 
         tvAvance.setText(estadoTexto + " (" + porcentaje + "%)");
         tvAvance.setTextColor(colorEstado);
 
-        // 4. Polimorfismo
+        // 5. Polimorfismo (Info extra)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         if (actividad instanceof ActividadAcademica) {
             ActividadAcademica ac = (ActividadAcademica) actividad;
@@ -178,7 +200,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
             tvDetalleExtra.setText(info);
         }
 
-        // 5. Historial de Sesiones
+        // 6. Historial de Sesiones
         layoutHistorialContainer.removeAllViews();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd MMM, HH:mm");
 

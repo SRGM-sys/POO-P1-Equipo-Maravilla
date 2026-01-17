@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +19,7 @@ import com.example.menuaplication.model.actividades.Actividad;
 import com.example.menuaplication.model.actividades.ActividadAcademica;
 import com.example.menuaplication.model.actividades.ActividadPersonal;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,15 +43,13 @@ public class ListaActividadesActivity extends AppCompatActivity {
         spinnerOrden = findViewById(R.id.spinnerOrden);
         btnCrear = findViewById(R.id.btnCrear);
 
-        // Botón Back (si lo agregaste al XML, si no, puedes borrar este bloque if)
+        // Botón Back (si lo agregaste al XML)
         ImageButton btnBack = findViewById(R.id.btnBackLista);
         if(btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
         }
 
         // --- CONFIGURACIÓN DE SPINNERS VISUALMENTE MEJORADOS ---
-        // Usamos el layout personalizado 'item_spinner_custom'
-        // Si te marca error en R.layout.item_spinner_custom, asegúrate de haber creado el XML
         ArrayAdapter<String> filtroAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_custom, new String[]{"Todos", "Académica", "Personal"});
         filtroAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFiltro.setAdapter(filtroAdapter);
@@ -80,7 +79,7 @@ public class ListaActividadesActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Botón flotante o normal para crear
+        // Botón para crear
         btnCrear.setOnClickListener(v -> startActivity(new Intent(this, CrearActividadActivity.class)));
     }
 
@@ -94,15 +93,27 @@ public class ListaActividadesActivity extends AppCompatActivity {
     private void refrescarLista() {
         List<Actividad> todas = RepositorioActividades.getInstance().getListaActividades();
         List<Actividad> filtradas = new ArrayList<>();
+        LocalDateTime ahora = LocalDateTime.now();
 
         // 1. Filtro
         String filtro = spinnerFiltro.getSelectedItem().toString();
-        if (filtro.equals("Todos")) {
-            filtradas.addAll(todas);
-        } else if (filtro.equals("Académica")) {
-            for (Actividad a : todas) if (a instanceof ActividadAcademica) filtradas.add(a);
-        } else {
-            for (Actividad a : todas) if (a instanceof ActividadPersonal) filtradas.add(a);
+
+        for (Actividad a : todas) {
+            // --- FILTRO DE VENCIMIENTO ---
+            // Si la fecha ya pasó y NO está al 100%, la ignoramos (no se agrega a la lista)
+            boolean estaVencida = a.getFechaVencimiento().isBefore(ahora) && a.getPorcentajeAvance() < 100;
+            if (estaVencida) {
+                continue; // Salta a la siguiente iteración del bucle
+            }
+            // -----------------------------
+
+            if (filtro.equals("Todos")) {
+                filtradas.add(a);
+            } else if (filtro.equals("Académica")) {
+                if (a instanceof ActividadAcademica) filtradas.add(a);
+            } else {
+                if (a instanceof ActividadPersonal) filtradas.add(a);
+            }
         }
 
         // 2. Ordenamiento

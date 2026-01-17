@@ -14,8 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="15dp"
+            android:gravity="center_vertical">
 
             <ImageButton
                 android:id="@+id/btnBackCrear"
@@ -24,16 +24,16 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Volver"
                 android:src="@android:drawable/ic_menu_revert"
-                app:tint="#333" />
+                app:tint="@color/hydro_text_secondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="Nueva Actividad"
-                android:textSize="22sp"
-                android:textStyle="bold"
                 android:textColor="#202124"
-                android:layout_marginStart="16dp"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -45,7 +45,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="534dp"
+                android:layout_height="533dp"
                 android:orientation="vertical"
                 android:padding="20dp">
 
@@ -93,7 +93,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombre"
                         android:layout_width="match_parent"
-                        android:layout_height="53dp" />
+                        android:layout_height="53dp"
+                        android:inputType="text|textCapSentences"
+                        android:maxLength="40" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -107,7 +109,7 @@
                         android:id="@+id/etDesc"
                         android:layout_width="match_parent"
                         android:layout_height="53dp"
-                        android:inputType="textMultiLine"
+                        android:inputType="text|textMultiLine"
                         android:minLines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,6 +150,7 @@
                             android:id="@+id/etMinutos"
                             android:layout_width="match_parent"
                             android:layout_height="53dp"
+                            android:maxLength="4"
                             android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -189,7 +192,9 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAsignatura"
                             android:layout_width="match_parent"
-                            android:layout_height="53dp" />
+                            android:layout_height="53dp"
+                            android:inputType="text|textCapSentences"
+                            android:maxLength="40" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
@@ -221,7 +226,8 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etLugar"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:maxLength="40" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
@@ -232,11 +238,11 @@
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/hydro_accent_green"
             android:text="GUARDAR ACTIVIDAD"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="#2196F3"
-            app:cornerRadius="30dp"/>
+            app:cornerRadius="30dp" />
     </LinearLayout>
 </ScrollView>

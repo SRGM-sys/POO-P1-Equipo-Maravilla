@@ -21,7 +21,7 @@
             android:backgroundTint="#FFFFFF"
             android:contentDescription="Volver"
             android:src="@android:drawable/ic_menu_revert"
-            android:tint="#333" />
+            android:tint="@color/hydro_text_secondary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
             android:layout_marginStart="8dp"
             android:text="Mis Actividades"
             android:textColor="#333"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -63,13 +63,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="#FFFFFF" />
 
     <Button
         android:id="@+id/btnCrear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:height="60dp"
         android:backgroundTint="#4CAF50"
-        android:text="Crear Nueva Actividad" />
+        android:text="CREAR ACTIVIDAD"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 </LinearLayout>

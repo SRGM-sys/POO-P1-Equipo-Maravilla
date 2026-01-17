@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.menuaplication.R;
 import com.example.menuaplication.data.RepositorioActividades;
@@ -118,10 +119,10 @@ public class TemporizadorActivity extends AppCompatActivity {
 
         if (tecnicaActual == TecnicaEnfoque.POMODORO) {
             tvModoTitulo.setText("POMODORO");
-            tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
+            tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.pomodoro_orange)));
         } else {
             tvModoTitulo.setText("DEEP WORK");
-            tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1A237E")));
+            tvModoTitulo.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.deepwork_purple)));
         }
         tvModoTitulo.setTextColor(Color.WHITE);
     }
@@ -134,24 +135,39 @@ public class TemporizadorActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 (int) (48 * getResources().getDisplayMetrics().density)
         );
-        params.setMargins(4, 0, 4, 0);
+        params.setMargins(8, 0, 8, 0);
 
-        // Botón de prueba 10s
+        // Define el espacio interno que quieres (ej. 16dp)
+        int paddingSides = (int) (25 * getResources().getDisplayMetrics().density);
+
+        // --- BOTÓN TEST 10s ---
         Button btnTest = new Button(this);
         btnTest.setText("10s");
         btnTest.setLayoutParams(params);
-        btnTest.setBackgroundResource(R.drawable.bg_boton_opcion);
+
+        // LAS 3 LÍNEAS MÁGICAS:
+        btnTest.setMinimumWidth(0); // 1. Rompe la regla del ancho mínimo
+        btnTest.setMinWidth(0);
+        btnTest.setBackgroundResource(R.drawable.bg_boton_opcion); // 2. Fondo primero
+        btnTest.setPadding(paddingSides, 0, paddingSides, 0); // 3. Padding al final
+
         btnTest.setTextColor(Color.parseColor("#455A64"));
         btnTest.setTypeface(null, Typeface.BOLD);
         btnTest.setOnClickListener(v -> prepararTimer(10000, 1));
         containerOpciones.addView(btnTest);
 
-        // Botones normales
+        // --- BOTONES DEL CICLO ---
         for (int min : minutos) {
             Button btn = new Button(this);
             btn.setText(min + "m");
             btn.setLayoutParams(params);
+
+            // LAS 3 LÍNEAS MÁGICAS OTRA VEZ:
+            btn.setMinimumWidth(0);
+            btn.setMinWidth(0);
             btn.setBackgroundResource(R.drawable.bg_boton_opcion);
+            btn.setPadding(paddingSides, 0, paddingSides, 0);
+
             btn.setTextColor(Color.parseColor("#455A64"));
             btn.setTypeface(null, Typeface.BOLD);
             btn.setOnClickListener(v -> prepararTimer(min * 60 * 1000L, min));

@@ -14,5 +14,8 @@
     <color name="hydro_text_secondary">#78909C</color>
     <color name="hydro_accent_green">#4CAF50</color>
     <color name="hydro_input_bg">#F1F3F4</color>
+
+    <color name="pomodoro_orange">#E45D35</color>
+    <color name="deepwork_purple">#673AB7</color>
 </resources>
 
