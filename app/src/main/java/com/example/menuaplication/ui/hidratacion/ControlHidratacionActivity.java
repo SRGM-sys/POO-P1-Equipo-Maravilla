@@ -40,10 +40,16 @@ public class ControlHidratacionActivity extends AppCompatActivity {
     private RecyclerView rvRegistros;
     private Button btnRegistrar, btnEstablecerMeta;
 
-    // Datos
+    // Datos y Lógica
     private RegistroAguaAdapter adapter;
-    private String fechaActualString;
-    private int metaDiaria = 2000;
+    private String fechaActualString; // Clave interna (ej: "19/01/2026")
+
+    // --- CAMBIO 1: Eliminamos la variable única 'metaDiaria' y creamos un Mapa ---
+    // private int metaDiaria = 2000; <--- ESTO YA NO SE USA ASI
+    private Map<String, Integer> metasPorFecha; // Mapa: FECHA -> META (ej: "21/01/2026" -> 3000)
+    private final int META_POR_DEFECTO = 2000;
+
+    // "Base de Datos" temporal en memoria
     private Map<String, List<RegistroAgua>> baseDeDatosLocal;
 
     @Override
@@ -53,8 +59,10 @@ public class ControlHidratacionActivity extends AppCompatActivity {
 
         inicializarVistas();
 
-        // Simulación DB
+        // Inicializar Datos (Simulación de DB)
         baseDeDatosLocal = new HashMap<>();
+        metasPorFecha = new HashMap<>(); // Inicializamos el mapa de metas
+
         cargarDatosPorDefecto();
 
         configurarRecyclerView();
@@ -72,6 +80,7 @@ public class ControlHidratacionActivity extends AppCompatActivity {
         btnRegistrar = findViewById(R.id.btnRegistrarAgua);
         btnEstablecerMeta = findViewById(R.id.btnEstablecerMeta);
 
+        // Fecha inicial
         fechaActualString = "19/01/2026";
         actualizarTextoFechaVisual();
     }
@@ -81,6 +90,9 @@ public class ControlHidratacionActivity extends AppCompatActivity {
         listaEnero19.add(new RegistroAgua(250, "08:00 AM", "19/01/2026"));
         listaEnero19.add(new RegistroAgua(500, "10:00 AM", "19/01/2026"));
         baseDeDatosLocal.put("19/01/2026", listaEnero19);
+
+        // Opcional: Si quieres que el 19 ya tenga una meta diferente por defecto
+        // metasPorFecha.put("19/01/2026", 2500);
     }
 
     private void configurarRecyclerView() {
@@ -102,20 +114,28 @@ public class ControlHidratacionActivity extends AppCompatActivity {
     }
 
     private void actualizarUI() {
+        // 1. Obtener registros (vasos de agua)
         List<RegistroAgua> registrosDelDia = baseDeDatosLocal.get(fechaActualString);
         if (registrosDelDia == null) registrosDelDia = new ArrayList<>();
-
         adapter.actualizarLista(registrosDelDia);
 
+        // 2. Calcular total consumido
         int totalMl = 0;
         for (RegistroAgua reg : registrosDelDia) totalMl += reg.getCantidadMl();
 
-        tvTotalConsumido.setText(totalMl + " ml");
-        tvMetaDiaria.setText(metaDiaria + " ml");
+        // --- CAMBIO 2: Obtener la META específica de ESTE día ---
+        int metaDelDiaActual = META_POR_DEFECTO; // 2000 por defecto
+        if (metasPorFecha.containsKey(fechaActualString)) {
+            metaDelDiaActual = metasPorFecha.get(fechaActualString);
+        }
 
+        // 3. Actualizar textos con la meta correcta
+        tvTotalConsumido.setText(totalMl + " ml");
+        tvMetaDiaria.setText(metaDelDiaActual + " ml");
+
+        // 4. Calcular porcentaje usando la meta dinámica
         int porcentaje = 0;
-        if (metaDiaria > 0) porcentaje = (totalMl * 100) / metaDiaria;
-        if (porcentaje > 100) porcentaje = 100;
+        if (metaDelDiaActual > 0) porcentaje = (totalMl * 100) / metaDelDiaActual;
 
         progressBar.setProgress(Math.min(porcentaje, 100));
         tvPorcentaje.setText(porcentaje + "%");
@@ -144,10 +164,9 @@ public class ControlHidratacionActivity extends AppCompatActivity {
         }
     }
 
-    // --- NUEVOS SELECTORES MATERIAL (LA SOLUCIÓN A LOS COLORES) ---
+    // --- SELECTORES Y DIÁLOGOS ---
 
     private void mostrarSelectorFechaMaterial() {
-        // Convertir String fecha a milisegundos
         long today = MaterialDatePicker.todayInUtcMilliseconds();
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -159,17 +178,16 @@ public class ControlHidratacionActivity extends AppCompatActivity {
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Selecciona fecha")
                 .setSelection(today)
-                .setTheme(R.style.TemaCalendarioVerde) // Aplicamos tu tema VERDE/AZUL
+                .setTheme(R.style.TemaCalendarioVerde)
                 .build();
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            // Convertir milisegundos a String dd/MM/yyyy
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             fechaActualString = sdf.format(new Date(selection));
 
             actualizarTextoFechaVisual();
-            actualizarUI();
+            actualizarUI(); // <--- Aquí se recalculará la meta para la nueva fecha
         });
 
         datePicker.show(getSupportFragmentManager(), "FECHA");
@@ -183,11 +201,23 @@ public class ControlHidratacionActivity extends AppCompatActivity {
         if (dialog.getWindow() != null) dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         EditText etMeta = view.findViewById(R.id.etNuevaMeta);
+
+        // Opcional: Mostrar en el EditText la meta actual de ese día para editarla más fácil
+        int metaActual = META_POR_DEFECTO;
+        if (metasPorFecha.containsKey(fechaActualString)) {
+            metaActual = metasPorFecha.get(fechaActualString);
+        }
+        etMeta.setText(String.valueOf(metaActual));
+
         view.findViewById(R.id.btnGuardarMeta).setOnClickListener(v -> {
             String metaStr = etMeta.getText().toString();
             if (!metaStr.isEmpty()) {
-                metaDiaria = Integer.parseInt(metaStr);
-                actualizarUI();
+                int nuevaMeta = Integer.parseInt(metaStr);
+
+                // --- CAMBIO 3: Guardar la meta SOLO para la fecha actual ---
+                metasPorFecha.put(fechaActualString, nuevaMeta);
+
+                actualizarUI(); // Refrescar la pantalla
                 dialog.dismiss();
             }
         });
@@ -209,7 +239,6 @@ public class ControlHidratacionActivity extends AppCompatActivity {
 
         final String[] horaSeleccionada = {""};
 
-        // CLICK EN HORA: AQUI USAMOS EL NUEVO RELOJ MATERIAL
         tvHora.setOnClickListener(v -> {
             Calendar c = Calendar.getInstance();
             int horaActual = c.get(Calendar.HOUR_OF_DAY);
@@ -220,13 +249,12 @@ public class ControlHidratacionActivity extends AppCompatActivity {
                     .setHour(horaActual)
                     .setMinute(minutoActual)
                     .setTitleText("Selecciona la hora")
-                    .setTheme(R.style.TemaRelojVerde) // Aplicamos tu tema VERDE/AZUL
+                    .setTheme(R.style.TemaRelojVerde)
                     .build();
 
             picker.addOnPositiveButtonClickListener(dialogView -> {
                 int newHour = picker.getHour();
                 int newMinute = picker.getMinute();
-
                 String amPm = (newHour < 12) ? "AM" : "PM";
                 int hora12 = (newHour > 12) ? newHour - 12 : newHour;
                 if (hora12 == 0) hora12 = 12;
@@ -247,10 +275,12 @@ public class ControlHidratacionActivity extends AppCompatActivity {
             }
             int cantidad = Integer.parseInt(cantidadStr);
             RegistroAgua nuevoRegistro = new RegistroAgua(cantidad, horaSeleccionada[0], fechaActualString);
+
             if (!baseDeDatosLocal.containsKey(fechaActualString)) {
                 baseDeDatosLocal.put(fechaActualString, new ArrayList<>());
             }
             baseDeDatosLocal.get(fechaActualString).add(nuevoRegistro);
+
             actualizarUI();
             dialog.dismiss();
         });
