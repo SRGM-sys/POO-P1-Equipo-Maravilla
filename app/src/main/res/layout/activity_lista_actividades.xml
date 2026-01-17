@@ -74,7 +74,7 @@
         android:layout_marginBottom="16dp"
         android:height="60dp"
         android:backgroundTint="#4CAF50"
-        android:text="CREAR ACTIVIDAD"
+        android:text="Crear Actividad"
         android:textSize="16sp"
         android:textStyle="bold" />
 </LinearLayout>

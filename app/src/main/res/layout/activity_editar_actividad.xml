@@ -246,7 +246,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/hydro_accent_green"
-            android:text="GUARDAR CAMBIOS"
+            android:text="Guardar Cambios"
             android:textSize="16sp"
             android:textStyle="bold"
             app:cornerRadius="30dp" />
