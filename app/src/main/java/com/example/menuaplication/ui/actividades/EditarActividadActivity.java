@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback; // IMPORTANTE: Nueva importación
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +28,14 @@ import com.example.menuaplication.model.actividades.TipoAcademica;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Pantalla que permite modificar los atributos de una actividad existente.
+ * Carga los datos actuales en el formulario y permite guardar cambios.
+ * El tipo de actividad (Académica/Personal) no es editable después de creada.
+ *
+ * @author José Paladines
+ * @version 1.0
+ */
 public class EditarActividadActivity extends AppCompatActivity {
 
     private EditText etNombre, etDescripcion, etMateria, etLugar, etTiempoEstimado, tvFecha, tvHora;
@@ -61,7 +69,6 @@ public class EditarActividadActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(v -> guardarCambios());
 
         // --- MANEJO MODERNO DEL BOTÓN ATRÁS ---
-        // Esto reemplaza al método onBackPressed() antiguo y evita el error
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -91,18 +98,16 @@ public class EditarActividadActivity extends AppCompatActivity {
         etTiempoEstimado = findViewById(R.id.etTiempoEstimado);
 
         btnGuardar = findViewById(R.id.btnGuardar);
-        btnBack = findViewById(R.id.btnBackEditar); // Asegúrate que el ID en XML sea btnBackEditar
+        btnBack = findViewById(R.id.btnBackEditar);
     }
 
     private void setupSpinners() {
-        // Tipo Actividad
+        // Tipo Actividad (Solo lectura)
         ArrayAdapter<CharSequence> adapterTipo = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, new String[]{"Académica", "Personal"});
         adapterTipo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipoActividad.setAdapter(adapterTipo);
-        // ESTA LÍNEA ES LA CLAVE: Deshabilitarlo en Java asegura que no se expanda
-        spinnerTipoActividad.setEnabled(false);
-        // También puedes forzar que no sea clickable
+        spinnerTipoActividad.setEnabled(false); // No se puede cambiar el tipo
         spinnerTipoActividad.setClickable(false);
 
         // Prioridad
@@ -241,15 +246,11 @@ public class EditarActividadActivity extends AppCompatActivity {
         finish();
     }
 
-    // Método extraído para mostrar el diálogo
     private void mostrarDialogoSalida() {
         new AlertDialog.Builder(this)
                 .setTitle("Descartar cambios")
                 .setMessage("No se han aplicado los cambios. ¿Está seguro que quiere salir?")
-                .setPositiveButton("Salir", (dialog, which) -> {
-                    // Aquí usamos finish() directamente, ya que queremos cerrar la actividad
-                    finish();
-                })
+                .setPositiveButton("Salir", (dialog, which) -> finish())
                 .setNegativeButton("Cancelar", null)
                 .show();
     }

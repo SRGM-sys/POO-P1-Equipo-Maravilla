@@ -25,6 +25,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Actividad principal del módulo que muestra la lista de actividades registradas.
+ *
+ * <p>Responsabilidades principales:</p>
+ * <ul>
+ * <li>Mostrar el RecyclerView con el {@link ActividadAdapter}.</li>
+ * <li>Filtrar actividades por tipo (Todas, Académicas, Personales).</li>
+ * <li>Ordenar actividades (Nombre, Fecha, Avance).</li>
+ * <li>Filtrar automáticamente las actividades vencidas para que no aparezcan.</li>
+ * </ul>
+ *
+ * @author José Paladines
+ * @version 1.0
+ */
 public class ListaActividadesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -90,6 +104,10 @@ public class ListaActividadesActivity extends AppCompatActivity {
         refrescarLista();
     }
 
+    /**
+     * Obtiene la lista completa de actividades, aplica las reglas de negocio
+     * (eliminar vencidas, filtrar por tipo) y ordena los resultados.
+     */
     private void refrescarLista() {
         List<Actividad> todas = RepositorioActividades.getInstance().getListaActividades();
         List<Actividad> filtradas = new ArrayList<>();

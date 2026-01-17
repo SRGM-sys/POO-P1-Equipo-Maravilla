@@ -29,6 +29,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Pantalla (Activity) encargada del registro de nuevas actividades.
+ * Permite al usuario ingresar información, seleccionar fechas y definir
+ * si la actividad es Académica o Personal, adaptando el formulario dinámicamente.
+ *
+ * @author José Paladines
+ * @version 1.0
+ */
 public class CrearActividadActivity extends AppCompatActivity {
 
     // Componentes de la interfaz
@@ -76,6 +84,10 @@ public class CrearActividadActivity extends AppCompatActivity {
         btnGuardar = findViewById(R.id.btnGuardar);
     }
 
+    /**
+     * Configura los adaptadores para los Spinners de Prioridad y Tipo Académico
+     * utilizando los valores de los Enums correspondientes.
+     */
     private void configurarSpinners() {
         // Spinner Prioridad
         spinnerPrioridad.setAdapter(new ArrayAdapter<>(this,
@@ -86,6 +98,9 @@ public class CrearActividadActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_dropdown_item, TipoAcademica.values()));
     }
 
+    /**
+     * Define los listeners para botones, campos de fecha y cambios en el tipo de actividad.
+     */
     private void configurarEventos() {
         // Botón volver
         btnBack.setOnClickListener(v -> finish());
@@ -142,6 +157,11 @@ public class CrearActividadActivity extends AppCompatActivity {
         etFechaVencimiento.setText(sdf.format(calendarioSeleccionado.getTime()));
     }
 
+    /**
+     * Recopila los datos del formulario, valida la entrada y guarda la actividad
+     * en el {@link RepositorioActividades}.
+     * Crea instancias de {@link ActividadAcademica} o {@link ActividadPersonal} según corresponda.
+     */
     private void guardarActividad() {
         // Validaciones generales
         String nombre = etNombre.getText().toString().trim();

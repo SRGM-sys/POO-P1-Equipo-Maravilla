@@ -33,13 +33,21 @@ import com.example.menuaplication.model.actividades.TecnicaEnfoque;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Pantalla que muestra la información completa de una actividad seleccionada.
+ * Desde aquí, el usuario puede ver el historial, editar, eliminar o iniciar
+ * una sesión de temporizador (Pomodoro/Deep Work).
+ *
+ * @author José Paladines
+ * @version 1.0
+ */
 public class DetalleActividadActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_EDITAR = 1001;
 
     private Actividad actividad;
     private TextView tvTitulo, tvDesc, tvDetalleExtra, tvAvance, tvId, tvTiempoEst, tvTiempoInv;
-    private ImageView imgTipoIcono; // <-- 1. NUEVA VARIABLE
+    private ImageView imgTipoIcono;
     private ProgressBar pbAvance;
     private LinearLayout layoutHistorialContainer;
     private Button btnPomodoro, btnDeepWork, btnAvance, btnEliminar, btnEditar;
@@ -49,7 +57,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_actividad);
 
-        // Recuperar el objeto
+        // Recuperar el objeto pasado por el Intent
         actividad = (Actividad) getIntent().getSerializableExtra("ACTIVIDAD_EXTRA");
 
         // Vincular Vistas
@@ -63,7 +71,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
         pbAvance = findViewById(R.id.pbDetalle);
         layoutHistorialContainer = findViewById(R.id.layoutHistorialContainer);
 
-        imgTipoIcono = findViewById(R.id.imgTipoIcono); // <-- 2. VINCULAR
+        imgTipoIcono = findViewById(R.id.imgTipoIcono);
 
         btnPomodoro = findViewById(R.id.btnPomodoro);
         btnDeepWork = findViewById(R.id.btnDeepWork);
@@ -92,6 +100,10 @@ public class DetalleActividadActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Método invocado cuando se regresa de la pantalla de edición.
+     * Actualiza los datos mostrados si la actividad fue modificada.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -118,6 +130,11 @@ public class DetalleActividadActivity extends AppCompatActivity {
         cargarDatos();
     }
 
+    /**
+     * Rellena la interfaz con los datos del objeto {@link Actividad}.
+     * Aplica polimorfismo para mostrar campos específicos (Materia vs Lugar)
+     * y selecciona el icono adecuado según el tipo.
+     */
     private void cargarDatos() {
         if (actividad == null) return;
 
@@ -130,12 +147,12 @@ public class DetalleActividadActivity extends AppCompatActivity {
         tvTiempoEst.setText("Estimado: " + actividad.getTiempoEstimadoMinutos() + " min");
         tvTiempoInv.setText("Invertido: " + actividad.getMinutosInvertidos() + " min");
 
-        // 3. Lógica del Icono <-- 3. LÓGICA DE ICONOS AÑADIDA
+        // 3. Lógica del Icono según tipo de actividad
         if (actividad instanceof ActividadPersonal) {
             imgTipoIcono.setImageResource(R.drawable.ic_personal);
         } else if (actividad instanceof ActividadAcademica) {
             ActividadAcademica ac = (ActividadAcademica) actividad;
-            // Verifica que los nombres del Enum (TAREA, PROYECTO, etc.) coincidan con tu archivo TipoAcademica.java
+            // Verifica el tipo para poner el icono correcto
             switch (ac.getTipo()) {
                 case TAREA:
                     imgTipoIcono.setImageResource(R.drawable.ic_tarea);
@@ -147,7 +164,6 @@ public class DetalleActividadActivity extends AppCompatActivity {
                     imgTipoIcono.setImageResource(R.drawable.ic_examen);
                     break;
                 default:
-                    // Icono por defecto si agregas otro tipo en el futuro
                     imgTipoIcono.setImageResource(R.drawable.ic_brain);
                     break;
             }
@@ -200,7 +216,7 @@ public class DetalleActividadActivity extends AppCompatActivity {
             tvDetalleExtra.setText(info);
         }
 
-        // 6. Historial de Sesiones
+        // 6. Historial de Sesiones (Generación dinámica de vistas)
         layoutHistorialContainer.removeAllViews();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd MMM, HH:mm");
 
@@ -334,6 +350,9 @@ public class DetalleActividadActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inicia la actividad del Temporizador enviando el objeto actividad y la técnica seleccionada.
+     */
     private void irATemporizador(TecnicaEnfoque tecnica) {
         Intent intent = new Intent(this, TemporizadorActivity.class);
         intent.putExtra("TECNICA", tecnica);

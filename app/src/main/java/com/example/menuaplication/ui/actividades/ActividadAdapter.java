@@ -28,20 +28,50 @@ import com.example.menuaplication.model.actividades.Actividad;
 import com.example.menuaplication.model.actividades.ActividadAcademica;
 import com.example.menuaplication.model.actividades.Prioridad;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Adaptador para el RecyclerView que gestiona la visualización de la lista de actividades.
+ * Se encarga de vincular los datos del modelo {@link Actividad} con las vistas del layout (item_actividad).
+ *
+ * <p>Incluye lógica visual para:</p>
+ * <ul>
+ * <li>Colorear el estado (Verde: Completada, Naranja: En Progreso, Gris: Pendiente).</li>
+ * <li>Mostrar la prioridad con colores de fondo distintivos.</li>
+ * <li>Gestionar eventos de clic (Detalles) y clic largo (Opciones rápidas).</li>
+ * </ul>
+ *
+ * @author José Paladines
+ * @version 1.0
+ */
 public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.ViewHolder> {
 
+    /** Lista de datos a mostrar. */
     private List<Actividad> actividades;
+
+    /** Referencia a la actividad contenedora para manejo de contextos y diálogos. */
     private final Activity activity;
+
     private static final String TAG = "ActividadAdapter";
 
+    /**
+     * Constructor del adaptador.
+     *
+     * @param actividades Lista inicial de actividades.
+     * @param activity    Actividad que contiene el RecyclerView.
+     */
     public ActividadAdapter(List<Actividad> actividades, Activity activity) {
         this.actividades = actividades;
         this.activity = activity;
     }
 
+    /**
+     * Actualiza la lista de datos y notifica al RecyclerView para refrescar la vista.
+     *
+     * @param nuevasActividades Nueva lista filtrada u ordenada.
+     */
     public void setActividades(List<Actividad> nuevasActividades) {
         this.actividades = nuevasActividades;
         notifyDataSetChanged();
@@ -54,19 +84,27 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         return new ViewHolder(view);
     }
 
+    /**
+     * Vincula los datos de una actividad específica con los elementos visuales del ViewHolder.
+     * Aquí reside la lógica de negocio visual (colores, textos dinámicos).
+     *
+     * @param holder   El ViewHolder a actualizar.
+     * @param position La posición del elemento en la lista.
+     */
     @Override
     public void onBindViewHolder(@NonNull ActividadAdapter.ViewHolder holder, int position) {
         Actividad actividad = actividades.get(position);
 
         holder.tvNombre.setText(actividad.getNombre());
 
+        // Identificar tipo mediante polimorfismo
         String tipo = (actividad instanceof ActividadAcademica) ? "Académica" : "Personal";
         holder.tvTipo.setText(tipo);
 
         holder.progressBar.setProgress((int) actividad.getPorcentajeAvance());
         holder.tvPorcentaje.setText((int) actividad.getPorcentajeAvance() + "%");
 
-        // LÓGICA DE ESTADO (Sin vencidos)
+        // LÓGICA DE ESTADO (Sin vencidos, ya que se filtran antes)
         if (actividad.getPorcentajeAvance() >= 100) {
             holder.tvEstado.setText("COMPLETADA");
             holder.tvEstado.setTextColor(Color.parseColor("#4CAF50")); // Verde
@@ -78,7 +116,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             holder.tvEstado.setTextColor(Color.parseColor("#757575")); // Gris
         }
 
-        // Prioridad
+        // Lógica visual de Prioridad
         holder.tvPrioridad.setText(String.valueOf(actividad.getPrioridad()));
         if (actividad.getPrioridad() == Prioridad.ALTA) {
             holder.tvPrioridad.setBackgroundColor(Color.parseColor("#FFEBEE"));
@@ -91,6 +129,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             holder.tvPrioridad.setTextColor(Color.parseColor("#2E7D32"));
         }
 
+        // Formateo de fecha
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM HH:mm");
         if (actividad.getFechaVencimiento() != null) {
             holder.tvFecha.setText("Vence: " + actividad.getFechaVencimiento().format(formatter));
@@ -99,7 +138,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             holder.tvFecha.setText("Sin fecha");
         }
 
-        // Click corto -> Detalle
+        // Click corto -> Navegar a Detalle
         holder.itemView.setOnClickListener(v -> {
             Context vCtx = v.getContext();
             Intent intent = new Intent(vCtx, DetalleActividadActivity.class);
@@ -107,13 +146,16 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             vCtx.startActivity(intent);
         });
 
-        // Click largo -> Opciones
+        // Click largo -> Mostrar opciones rápidas (Avance / Eliminar)
         holder.itemView.setOnLongClickListener(v -> {
             mostrarOpciones(actividad, holder.getAdapterPosition(), v.getContext());
             return true;
         });
     }
 
+    /**
+     * Muestra un cuadro de diálogo con opciones rápidas al mantener pulsada una actividad.
+     */
     private void mostrarOpciones(Actividad actividad, int position, Context viewContext) {
         Context ctx = (viewContext != null) ? viewContext : activity;
         if (!(ctx instanceof Activity)) return;
@@ -133,6 +175,9 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
 
     // --- DIALOGOS ---
 
+    /**
+     * Muestra el diálogo personalizado para ingresar manualmente un porcentaje de avance.
+     */
     private void mostrarDialogoAvance(Actividad actividad, int position, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
         if (!(ctx instanceof Activity)) return;
@@ -186,6 +231,9 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         }
     }
 
+    /**
+     * Diálogo de confirmación antes de guardar el nuevo avance en el repositorio.
+     */
     private void mostrarConfirmacionAvance(Actividad actividad, int position, double nuevoAvance, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
         if (!(ctx instanceof Activity)) return;
@@ -210,6 +258,7 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             if (btnSi != null) {
                 btnSi.setOnClickListener(v -> {
                     actividad.setPorcentajeAvance(nuevoAvance);
+                    // IMPORTANTE: Guardar en repositorio para que persista
                     RepositorioActividades.getInstance().actualizarActividad(actividad);
 
                     if (position >= 0 && position < actividades.size()) {
@@ -230,6 +279,9 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         }
     }
 
+    /**
+     * Muestra diálogo de advertencia para eliminar definitivamente una actividad.
+     */
     private void mostrarDialogoEliminar(Actividad actividad, int position, Context callerContext) {
         Context ctx = (callerContext instanceof Activity) ? callerContext : activity;
         if (!(ctx instanceof Activity)) return;
@@ -250,8 +302,10 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
 
             if (btnEliminar != null) {
                 btnEliminar.setOnClickListener(v -> {
+                    // Primero eliminamos del repositorio (disco)
                     RepositorioActividades.getInstance().eliminarActividad(actividad);
 
+                    // Luego actualizamos la lista visual
                     if (position >= 0 && position < actividades.size()) {
                         actividades.remove(position);
                         notifyItemRemoved(position);
@@ -270,6 +324,9 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         }
     }
 
+    /**
+     * Configura el fondo del diálogo para que sea transparente y permita esquinas redondeadas.
+     */
     private void configurarVentanaTransparente(Dialog dialog) {
         Window w = dialog.getWindow();
         if (w != null) {
@@ -283,6 +340,9 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
         return actividades != null ? actividades.size() : 0;
     }
 
+    /**
+     * Clase interna que mantiene las referencias a las vistas de cada tarjeta (item).
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvNombre, tvTipo, tvPrioridad, tvEstado, tvPorcentaje, tvFecha;
         ProgressBar progressBar;

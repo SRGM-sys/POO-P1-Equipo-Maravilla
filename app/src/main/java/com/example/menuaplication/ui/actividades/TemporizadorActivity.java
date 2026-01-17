@@ -27,10 +27,18 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Random;
 
+/**
+ * Pantalla que implementa el temporizador para las técnicas de estudio (Pomodoro y Deep Work).
+ * Gestiona la cuenta regresiva, la interfaz visual dinámica y el registro de la sesión
+ * al finalizar el tiempo.
+ *
+ * @author José Paladines
+ * @version 1.0
+ */
 public class TemporizadorActivity extends AppCompatActivity {
 
     // Vistas
-    private TextView tvTiempo, tvFrase, tvModoTitulo, tvNombreActividad; // Añadido tvNombreActividad
+    private TextView tvTiempo, tvFrase, tvModoTitulo, tvNombreActividad;
     private ProgressBar progressBarTimer;
     private Button btnIniciar, btnPausar, btnFinalizarAhora, btnReiniciar;
     private ImageButton btnBack;
@@ -47,6 +55,7 @@ public class TemporizadorActivity extends AppCompatActivity {
     private TecnicaEnfoque tecnicaActual;
     private int duracionTotalMinutos;
 
+    /** Lista de frases motivadoras que se muestran aleatoriamente al usuario. */
     private final String[] frasesMotivadoras = {
             "¡Tú puedes con esto!",
             "Concéntrate en el ahora.",
@@ -70,7 +79,7 @@ public class TemporizadorActivity extends AppCompatActivity {
         progressBarTimer = findViewById(R.id.progressBarTimer);
         tvFrase = findViewById(R.id.tvFrase);
         tvModoTitulo = findViewById(R.id.tvModoTitulo);
-        tvNombreActividad = findViewById(R.id.tvNombreActividadTimer); // NUEVO
+        tvNombreActividad = findViewById(R.id.tvNombreActividadTimer);
         containerOpciones = findViewById(R.id.containerOpciones);
 
         // Mostrar nombre de la actividad
@@ -113,6 +122,9 @@ public class TemporizadorActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Ajusta los colores y títulos de la pantalla según la técnica elegida (Naranja para Pomodoro, Morado para Deep Work).
+     */
     private void configurarEstiloPorTecnica() {
         progressBarTimer.setMax(100);
         progressBarTimer.setProgress(0);
@@ -127,6 +139,11 @@ public class TemporizadorActivity extends AppCompatActivity {
         tvModoTitulo.setTextColor(Color.WHITE);
     }
 
+    /**
+     * Crea dinámicamente los botones de selección de tiempo (ej. 25m, 50m)
+     * basándose en la técnica seleccionada. Aplica estilos programáticamente para
+     * controlar el padding y el ancho mínimo.
+     */
     private void generarBotonesDuracion() {
         containerOpciones.removeAllViews();
         int[] minutos = (tecnicaActual == TecnicaEnfoque.POMODORO) ? new int[]{25, 5, 15} : new int[]{45, 60, 90};
@@ -175,6 +192,10 @@ public class TemporizadorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Prepara el temporizador con el tiempo seleccionado pero no lo inicia.
+     * Actualiza la interfaz para mostrar el tiempo listo.
+     */
     private void prepararTimer(long millis, int minutosReales) {
         tiempoRestanteMillis = millis;
         tiempoTotalInicialMillis = millis;
@@ -293,6 +314,10 @@ public class TemporizadorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Guarda la sesión finalizada en el historial de la actividad.
+     * Calcula y actualiza el nuevo porcentaje de avance basado en el tiempo invertido.
+     */
     private void guardarSesion() {
         if (actividadActual != null) {
             SesionEnfoque nuevaSesion = new SesionEnfoque(LocalDateTime.now(), duracionTotalMinutos, tecnicaActual, true);
