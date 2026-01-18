@@ -1,8 +1,11 @@
 package com.example.menuaplication.model.sostenibilidad;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class RegistroSostenibilidad {
+// IMPORTANTE: 'implements Serializable' es obligatorio para guardar en archivo
+public class RegistroSostenibilidad implements Serializable {
+    private static final long serialVersionUID = 1L; // Versión de serialización
     private LocalDate fecha;
     private boolean usoTransporteSostenible;
     private boolean evitoImpresiones;
@@ -13,47 +16,22 @@ public class RegistroSostenibilidad {
         this.fecha = fecha;
     }
 
-    //Getters y Setters
-    public LocalDate getFecha() {
-        return fecha;
-    }
+    // Getters y Setters
+    public LocalDate getFecha() { return fecha; }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
+    public boolean isUsoTransporteSostenible() { return usoTransporteSostenible; }
+    public void setUsoTransporteSostenible(boolean val) { this.usoTransporteSostenible = val; }
 
-    public boolean isUsoTransporteSostenible() {
-        return usoTransporteSostenible;
-    }
+    public boolean isEvitoImpresiones() { return evitoImpresiones; }
+    public void setEvitoImpresiones(boolean val) { this.evitoImpresiones = val; }
 
-    public void setUsoTransporteSostenible(boolean usoTransporteSostenible) {
-        this.usoTransporteSostenible = usoTransporteSostenible;
-    }
+    public boolean isEvitoEnvasesDescartables() { return evitoEnvasesDescartables; }
+    public void setEvitoEnvasesDescartables(boolean val) { this.evitoEnvasesDescartables = val; }
 
-    public boolean isEvitoImpresiones() {
-        return evitoImpresiones;
-    }
+    public boolean isSeparoResiduos() { return separoResiduos; }
+    public void setSeparoResiduos(boolean val) { this.separoResiduos = val; }
 
-    public void setEvitoImpresiones(boolean evitoImpresiones) {
-        this.evitoImpresiones = evitoImpresiones;
-    }
-
-    public boolean isEvitoEnvasesDescartables() {
-        return evitoEnvasesDescartables;
-    }
-
-    public void setEvitoEnvasesDescartables(boolean evitoEnvasesDescartables) {
-        this.evitoEnvasesDescartables = evitoEnvasesDescartables;
-    }
-
-    public boolean isSeparoResiduos() {
-        return separoResiduos;
-    }
-
-    public void setSeparoResiduos(boolean separoResiduos) {
-        this.separoResiduos = separoResiduos;
-    }
-
+    // Calcula puntos del día (0 a 4)
     public int getPuntosDia() {
         int puntos = 0;
         if (usoTransporteSostenible) puntos++;
