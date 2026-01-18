@@ -15,6 +15,5 @@
         android:layout_height="match_parent"
         android:padding="16dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_lumen"
-        app:tint="@color/white" />
+        android:src="@drawable/ic_lumen" />
 </androidx.cardview.widget.CardView>
