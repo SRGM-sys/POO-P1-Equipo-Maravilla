@@ -1,7 +1,10 @@
 package com.example.menuaplication.ui.juego;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,10 +16,12 @@ import com.example.menuaplication.model.juego.TarjetaMemoria;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Actividad principal que controla la lógica del juego de memoria.
  * Gestiona el tablero, el emparejamiento de cartas, el conteo de intentos y el estado del juego.
+ * incluye temporizador y registro de récord.
  *
  * @author TheMatthias
  */
@@ -25,6 +30,7 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
     private RecyclerView rvTablero;
     private TextView tvPares;
     private TextView tvIntentos;
+    private TextView tvCronometro;
     private ImageButton btnVolver;
 
     private AdaptadorMemoria adaptador;
@@ -35,9 +41,28 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
     private TarjetaMemoria primeraTarjetaSeleccionada = null;
     private boolean turnoBloqueado = false;
 
+    private long tiempoInicio = 0;
+    private Handler timerHandler = new Handler(Looper.getMainLooper());
+    private boolean juegoTerminado = false;
+
+    private Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!juegoTerminado) {
+                long millis = System.currentTimeMillis() - tiempoInicio;
+                int segundos = (int) (millis / 1000);
+                int minutos = segundos / 60;
+                segundos = segundos % 60;
+
+                tvCronometro.setText(String.format(Locale.getDefault(), "⏱ %02d:%02d", minutos, segundos));
+                timerHandler.postDelayed(this, 500);
+            }
+        }
+    };
+
 
     /**
-     * Método llamado al crear la actividad.
+     * Metodo llamado al crear la actividad.
      * Configura la interfaz, inicializa las vistas y arranca el juego.
      *
      * @param savedInstanceState Estado guardado de la actividad, si existe.
@@ -63,6 +88,7 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
         tvIntentos = findViewById(R.id.tv_intentos);
         btnVolver = findViewById(R.id.btn_volver_menu);
 
+        tvCronometro = findViewById(R.id.tv_cronometro);
         btnVolver.setOnClickListener(v -> finish());
     }
 
@@ -105,6 +131,10 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
         rvTablero.setAdapter(adaptador);
 
         actualizarMarcadores();
+
+        tiempoInicio = System.currentTimeMillis();
+        juegoTerminado = false;
+        timerHandler.postDelayed(timerRunnable, 0);
     }
 
 
@@ -149,7 +179,7 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
             turnoBloqueado = false;
 
             if (paresEncontrados == 8) {
-                Toast.makeText(this, "¡Juego Terminado! Intentos: " + intentos, Toast.LENGTH_LONG).show();
+                finalizarJuego();
             }
         } else {
             new Handler().postDelayed(() -> {
@@ -161,6 +191,31 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
         }
     }
 
+    private void finalizarJuego() {
+        juegoTerminado = true;
+        timerHandler.removeCallbacks(timerRunnable);
+
+        long tiempoTotal = System.currentTimeMillis() - tiempoInicio;
+        guardarRecord(tiempoTotal);
+
+        Toast.makeText(this, "¡Juego Terminado!", Toast.LENGTH_LONG).show();
+    }
+
+
+    /**
+     * Guarda el tiempo si es un nuevo récord.
+     */
+    private void guardarRecord(long tiempoActual) {
+        SharedPreferences prefs = getSharedPreferences("JuegoMemoriaPrefs", Context.MODE_PRIVATE);
+        long mejorTiempo = prefs.getLong("mejor_tiempo", Long.MAX_VALUE);
+
+        if (tiempoActual < mejorTiempo) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putLong("mejor_tiempo", tiempoActual);
+            editor.apply();
+            Toast.makeText(this, "¡Nuevo Récord Alcanzado! 🏆", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
      * Actualiza los TextViews de la interfaz con el número actual de pares encontrados e intentos realizados.
@@ -169,5 +224,12 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
         // Actualizamos los textos de tu layout
         tvPares.setText("Pares: " + paresEncontrados + "/8");
         tvIntentos.setText("Intentos: " + intentos);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Detener el handler para evitar fugas de memoria
+        timerHandler.removeCallbacks(timerRunnable);
     }
 }
