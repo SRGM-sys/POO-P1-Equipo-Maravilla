@@ -125,13 +125,22 @@ public class MainActivity extends AppCompatActivity {
             // MODO: LOGUEADO
             tvBienvenida.setText("Hola " + gestorSesion.getUsuario());
             ivPerfilUsuario.setVisibility(View.VISIBLE);
+
+            // --- NUEVO: MOSTRAR EL ARCADE ---
+            btnMenuJuegos.setVisibility(View.VISIBLE);
+            // --------------------------------
+
             btnIniciarSesion.setText("Cerrar Sesión");
         } else {
             // MODO: INVITADO
             tvBienvenida.setText("Hola Usuario");
             ivPerfilUsuario.setVisibility(View.GONE);
-            btnIniciarSesion.setText("Iniciar Sesión");
 
+            // --- NUEVO: OCULTAR EL ARCADE ---
+            btnMenuJuegos.setVisibility(View.GONE);
+            // --------------------------------
+
+            btnIniciarSesion.setText("Iniciar Sesión");
         }
     }
 

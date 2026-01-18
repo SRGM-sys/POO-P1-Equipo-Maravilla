@@ -220,6 +220,7 @@
                 android:id="@+id/btnMenuJuegos"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:visibility="gone"
                 android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/arcade_blue"
                 android:letterSpacing="0.05"
