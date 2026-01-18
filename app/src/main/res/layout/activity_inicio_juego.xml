@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Entrenamiento de Memoria"
+            android:text="Juego de Memoria Sostenible"
             android:textColor="@color/text_dark"
             android:textSize="24sp"
             android:textStyle="bold" />

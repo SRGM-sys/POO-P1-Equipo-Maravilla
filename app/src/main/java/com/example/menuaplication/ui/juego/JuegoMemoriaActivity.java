@@ -63,12 +63,12 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
 
         // Iconos
         int[] imagenes = {
-                R.drawable.ic_brain,     // Imagen 1
-                R.drawable.ic_leaf,      // Imagen 2
-                R.drawable.ic_water,     // Imagen 3
-                R.drawable.ic_task,      // Imagen 4
-                R.drawable.ic_lumen,     // Imagen 5
-                R.drawable.ic_personal,  // Imagen 6
+                R.drawable.ic_arbolito,     // Imagen 1
+                R.drawable.ic_molino,      // Imagen 2
+                R.drawable.ic_reciclaje,     // Imagen 3
+                R.drawable.ic_odish,      // Imagen 4
+                R.drawable.ic_bicicleta,     // Imagen 5
+                R.drawable.ic_aguita,  // Imagen 6
                 R.drawable.ic_proyecto,  // Imagen 7
                 R.drawable.ic_tarea      // Imagen 8
         };
