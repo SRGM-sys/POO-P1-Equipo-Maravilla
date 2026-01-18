@@ -1,14 +1,15 @@
-package com.example.menuaplication.ui.puzzle; // Paquete nuevo
+package com.example.menuaplication.ui.puzzle;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton; // [NUEVO] Importar ImageButton
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menuaplication.R;
-import com.example.menuaplication.model.puzzle.FichaPuzzle; // Importación correcta
+import com.example.menuaplication.model.puzzle.FichaPuzzle;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +19,7 @@ public class PuzzleDeslizanteActivity extends AppCompatActivity {
 
     private RecyclerView rvTablero;
     private Button btnReiniciar;
+    private ImageButton btnVolver; // [NUEVO] Variable para el botón
     private PuzzleAdapter adapter;
     private List<FichaPuzzle> fichas;
 
@@ -38,8 +40,12 @@ public class PuzzleDeslizanteActivity extends AppCompatActivity {
     private void inicializarVistas() {
         rvTablero = findViewById(R.id.rv_tablero_puzzle);
         btnReiniciar = findViewById(R.id.btn_reiniciar_juego);
+        btnVolver = findViewById(R.id.btn_volver_menu); // [NUEVO] Vincular con el XML
 
         btnReiniciar.setOnClickListener(v -> mezclarTablero());
+
+        // [NUEVO] Lógica para regresar al menú
+        btnVolver.setOnClickListener(v -> finish());
     }
 
     private void configurarJuego() {

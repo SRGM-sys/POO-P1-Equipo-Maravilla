@@ -6,16 +6,33 @@
     android:background="@color/white"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tv_titulo_puzzle"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Puzzle Deslizante"
-        android:textColor="@color/text_dark"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_volver_menu"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_menu_revert"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Regresar al menú"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tv_titulo_puzzle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Puzzle Deslizante"
+            android:textColor="@color/text_dark"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_tablero_puzzle"
