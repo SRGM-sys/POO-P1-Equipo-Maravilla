@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3 en Raya"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_blue"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvTurno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Turno: X"
+        android:textSize="20sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="32dp"/>
+
+    <GridLayout
+        android:id="@+id/glTablero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rowCount="3"
+        android:columnCount="3"
+        android:background="@drawable/fondo_dialogo_redondo"
+        android:padding="8dp"
+        android:elevation="4dp">
+
+        <Button android:id="@+id/btn00" style="@style/EstiloCelda"/>
+        <Button android:id="@+id/btn01" style="@style/EstiloCelda"/>
+        <Button android:id="@+id/btn02" style="@style/EstiloCelda"/>
+
+        <Button android:id="@+id/btn10" style="@style/EstiloCelda"/>
+        <Button android:id="@+id/btn11" style="@style/EstiloCelda"/>
+        <Button android:id="@+id/btn12" style="@style/EstiloCelda"/>
+
+        <Button android:id="@+id/btn20" style="@style/EstiloCelda"/>
+        <Button android:id="@+id/btn21" style="@style/EstiloCelda"/>
+        <Button android:id="@+id/btn22" style="@style/EstiloCelda"/>
+
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnLimpiar"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Limpiar"
+            android:backgroundTint="@color/primary_blue"
+            app:cornerRadius="12dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnSalir"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Salir"
+            android:textColor="@color/exit_red"
+            android:backgroundTint="@color/exit_bg"
+            app:strokeColor="@color/exit_red"
+            app:strokeWidth="1dp"
+            app:cornerRadius="12dp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+</LinearLayout>

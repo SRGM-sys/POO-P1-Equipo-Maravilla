@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.menuaplication.R;
 import com.example.menuaplication.ui.buscaminas.BuscaminasActivity;
 import com.example.menuaplication.ui.puzzle.PuzzleDeslizanteActivity;
+import com.example.menuaplication.ui.raya.TresEnRayaActivity;
 
 public class DialogoJuegos {
 
@@ -32,7 +33,9 @@ public class DialogoJuegos {
 
         // --- JUEGO 2: PUZZLE DESLIZANTE ---
         btnJuego2.setOnClickListener(v -> {
-
+            Intent intent = new Intent(context, TresEnRayaActivity.class);
+            context.startActivity(intent);
+            dialog.dismiss();
         });
 
         // --- JUEGO 3 ---
