@@ -6,7 +6,7 @@
     android:layout_margin="2dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="@color/primary_blue">
+    app:cardBackgroundColor="@color/azulito">
 
     <TextView
         android:id="@+id/tv_numero_ficha"

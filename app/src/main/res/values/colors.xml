@@ -29,5 +29,6 @@
     <color name="text_secondary">#78909C</color>
     <color name="button_surface_color">#FFFFFF</color>
     <color name="exit_bg">#FFEBEE</color>
+    <color name="azulito">#A3CEEF</color>
 </resources>
 
