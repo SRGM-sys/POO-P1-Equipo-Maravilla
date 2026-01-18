@@ -61,12 +61,16 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
     private void iniciarJuego() {
         listaTarjetas = new ArrayList<>();
 
-        // Iconos (Asegúrate de tener estos drawables o cambia los nombres)
+        // Iconos
         int[] imagenes = {
-                R.drawable.ic_brain, R.drawable.ic_leaf,
-                R.drawable.ic_water, R.drawable.ic_task,
-                R.drawable.ic_lumen, R.drawable.ic_personal,
-                R.drawable.ic_proyecto, R.drawable.ic_tarea
+                R.drawable.ic_brain,     // Imagen 1
+                R.drawable.ic_leaf,      // Imagen 2
+                R.drawable.ic_water,     // Imagen 3
+                R.drawable.ic_task,      // Imagen 4
+                R.drawable.ic_lumen,     // Imagen 5
+                R.drawable.ic_personal,  // Imagen 6
+                R.drawable.ic_proyecto,  // Imagen 7
+                R.drawable.ic_tarea      // Imagen 8
         };
 
         for (int img : imagenes) {

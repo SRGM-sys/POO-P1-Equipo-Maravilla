@@ -46,7 +46,7 @@ public class AdaptadorMemoria extends RecyclerView.Adapter<AdaptadorMemoria.View
 
             // 1. Mostrar la imagen del cerebro, hoja, etc.
             holder.ivContenido.setImageResource(tarjeta.getImagenResId());
-            holder.ivContenido.clearColorFilter(); // Quitamos el filtro blanco para ver colores originales
+            holder.ivContenido.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.black));
 
             // 2. Fondo blanco para que destaque la imagen
             holder.card.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
