@@ -17,5 +17,10 @@
 
     <color name="pomodoro_orange">#E45D35</color>
     <color name="deepwork_purple">#673AB7</color>
+
+    <color name="halloween_orange">#FF9800</color>
+    <color name="halloween_purple">#673AB7</color>
+    <color name="halloween_dark">#1A1A1A</color>
+    <color name="halloween_cell">#2C2C2C</color>
 </resources>
 

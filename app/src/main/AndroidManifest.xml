@@ -45,6 +45,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name=".ui.sostenibilidad.ResumenSostenibilidadActivity" />
+        <activity
+            android:name=".ui.buscaminas.BuscaminasActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>
