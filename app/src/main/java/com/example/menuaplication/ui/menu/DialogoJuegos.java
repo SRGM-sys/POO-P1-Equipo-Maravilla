@@ -29,14 +29,14 @@ public class DialogoJuegos {
 
         // --- JUEGO 2: PUZZLE DESLIZANTE ---
         btnJuego2.setOnClickListener(v -> {
-            Intent intent = new Intent(context, PuzzleDeslizanteActivity.class);
-            context.startActivity(intent);
-            dialog.dismiss();
+            Toast.makeText(context, "Creando el Juego 1...", Toast.LENGTH_SHORT).show();
         });
 
         // --- JUEGO 3 ---
         btnJuego3.setOnClickListener(v -> {
-            Toast.makeText(context, "Creando el Juego 3...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, PuzzleDeslizanteActivity.class);
+            context.startActivity(intent);
+            dialog.dismiss();
         });
 
         dialog.show();

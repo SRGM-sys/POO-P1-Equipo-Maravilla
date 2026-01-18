@@ -10,7 +10,7 @@
         android:id="@+id/tv_titulo_puzzle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Puzzle 7x5"
+        android:text="Puzzle Deslizante"
         android:textColor="@color/text_dark"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mezclar / Reiniciar"
-        android:backgroundTint="@color/primary_green"
+        android:backgroundTint="@color/hydro_primary"
         android:textColor="@color/white"
         android:layout_marginTop="16dp"/>
 </LinearLayout>
