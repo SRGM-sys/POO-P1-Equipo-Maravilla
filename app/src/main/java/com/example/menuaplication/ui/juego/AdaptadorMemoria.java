@@ -12,22 +12,55 @@ import com.example.menuaplication.R;
 import com.example.menuaplication.model.juego.TarjetaMemoria;
 import java.util.List;
 
+/**
+ * Adaptador personalizado para gestionar la visualización de las cartas en el juego de memoria.
+ * Se encarga de inflar el diseño de cada carta y actualizar su estado visual (volteada, encontrada u oculta)
+ * dentro del RecyclerView.
+ *
+ * @author TheMatthias
+ */
+
 public class AdaptadorMemoria extends RecyclerView.Adapter<AdaptadorMemoria.ViewHolder> {
 
     private final List<TarjetaMemoria> tarjetas;
     private final OnCartaClickListener listener;
 
-    // INTERFAZ: La actualizamos para enviar el Objeto y la Posición
-    // Esto es vital para que coincida con el método 'manejarClickTarjeta' de tu Activity
+
+    /**
+     * Interfaz para gestionar los eventos de clic en las cartas.
+     * Permite la comunicación entre el adaptador y la Activity/Fragment que contiene la lógica del juego.
+     */
     public interface OnCartaClickListener {
+        /**
+         * Se invoca cuando el usuario hace clic en una carta.
+         *
+         * @param tarjeta  El objeto TarjetaMemoria que fue seleccionado.
+         * @param posicion La posición del ítem en el adaptador.
+         */
         void onCartaClick(TarjetaMemoria tarjeta, int posicion);
     }
 
+
+    /**
+     * Constructor del adaptador.
+     *
+     * @param tarjetas Lista de objetos TarjetaMemoria que se mostrarán en la grilla.
+     * @param listener Listener para manejar la interacción del usuario.
+     */
     public AdaptadorMemoria(List<TarjetaMemoria> tarjetas, OnCartaClickListener listener) {
         this.tarjetas = tarjetas;
         this.listener = listener;
     }
 
+
+
+    /**
+     * Crea una nueva instancia de ViewHolder inflando el layout XML correspondiente.
+     *
+     * @param parent   El ViewGroup al que se añadirá la nueva vista.
+     * @param viewType El tipo de vista (no utilizado en este caso ya que todas son iguales).
+     * @return Una nueva instancia de ViewHolder.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,53 +69,60 @@ public class AdaptadorMemoria extends RecyclerView.Adapter<AdaptadorMemoria.View
         return new ViewHolder(view);
     }
 
+
+    /**
+     * Vincula los datos de una TarjetaMemoria con las vistas del ViewHolder.
+     * Gestiona la lógica visual para mostrar el reverso o el anverso de la carta según su estado.
+     *
+     * @param holder   El ViewHolder que debe ser actualizado.
+     * @param position La posición del ítem dentro del conjunto de datos.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TarjetaMemoria tarjeta = tarjetas.get(position);
 
-        // LÓGICA VISUAL:
-        // Si está volteada (la acabamos de tocar) o encontrada (ya es par), mostramos la imagen real.
         if (tarjeta.isVolteada() || tarjeta.isEncontrada()) {
 
-            // 1. Mostrar la imagen del cerebro, hoja, etc.
             holder.ivContenido.setImageResource(tarjeta.getImagenResId());
-            holder.ivContenido.clearColorFilter(); // Quitamos el filtro blanco para ver colores originales
-
-            // 2. Fondo blanco para que destaque la imagen
+            holder.ivContenido.clearColorFilter();
             holder.card.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
-
-            // IMPORTANTE: Desactivamos el click si ya está volteada/encontrada para evitar errores
             holder.itemView.setClickable(false);
 
         } else {
-            // ESTADO OCULTO (Reverso):
 
-            // 1. Mostramos tu logo 'Lumen' como reverso
             holder.ivContenido.setImageResource(R.drawable.ic_lumen);
-
-            // 2. Le ponemos tinte blanco para que contraste con el fondo de color
             holder.ivContenido.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
-
-            // 3. Fondo del color del juego (game_accent)
             holder.card.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.game_accent));
-
-            // Habilitamos el click
             holder.itemView.setClickable(true);
         }
 
-        // Listener: Al hacer click, notificamos a la Activity qué carta fue
         holder.itemView.setOnClickListener(v -> listener.onCartaClick(tarjeta, position));
     }
 
+
+    /**
+     * Devuelve el número total de elementos en el conjunto de datos.
+     *
+     * @return El tamaño de la lista de tarjetas.
+     */
     @Override
     public int getItemCount() {
         return tarjetas.size();
     }
 
+
+    /**
+     * ViewHolder que contiene las referencias a las vistas de cada ítem de carta.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivContenido;
         CardView card;
 
+        /**
+         * Constructor del ViewHolder.
+         *
+         * @param itemView La vista raíz del ítem.
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // Asegúrate que estos IDs existan en 'item_tarjeta_memoria.xml'
