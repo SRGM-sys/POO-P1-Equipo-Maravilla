@@ -30,6 +30,9 @@
 
         <activity android:name=".ui.juego.JuegoMemoriaActivity" />
 
+        <activity android:name=".ui.puzzle.PuzzleDeslizanteActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ui.menu.MainActivity"
             android:exported="false"></activity>
