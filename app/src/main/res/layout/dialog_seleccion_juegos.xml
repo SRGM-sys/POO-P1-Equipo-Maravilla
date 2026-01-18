@@ -34,18 +34,16 @@
                 android:id="@+id/btnNuevoJuego1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_lumen"
-                android:background="@drawable/bg_boton_opcion"
-                android:backgroundTint="#4CAF50"
+                android:background="@drawable/ic_buscaminas"
                 android:padding="12dp"
                 android:scaleType="fitCenter"
                 android:contentDescription="Juego 1"
-                app:tint="@color/white"/>
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Juego 1"
+                android:text="Buscaminas"
                 android:textSize="12sp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/text_secondary"/>
@@ -62,18 +60,16 @@
                 android:id="@+id/btnNuevoJuego2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_lumen"
-                android:background="@drawable/bg_boton_opcion"
-                android:backgroundTint="#FF9800"
+                android:background="@drawable/ic_3_en_raya"
                 android:padding="12dp"
                 android:scaleType="fitCenter"
                 android:contentDescription="Juego 2"
-                app:tint="@color/white"/>
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Juego 2"
+                android:text="3 en Raya"
                 android:textSize="12sp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/text_secondary"/>
@@ -89,18 +85,15 @@
                 android:id="@+id/btnNuevoJuego3"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_lumen"
-                android:background="@drawable/bg_boton_opcion"
-                android:backgroundTint="#2196F3"
+                android:background="@drawable/ic_puzle"
                 android:padding="12dp"
                 android:scaleType="fitCenter"
-                android:contentDescription="Juego 3"
-                app:tint="@color/white"/>
+                android:contentDescription="Juego 3" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Juego 3"
+                android:text="Puzle Deslizante"
                 android:textSize="12sp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/text_secondary"/>

@@ -31,11 +31,15 @@ public class DialogoJuegos {
         // --- ESPACIO PARA EL NUEVO JUEGO 2 ---
         btnJuego2.setOnClickListener(v -> {
             Toast.makeText(context, "Creando el Juego 2...", Toast.LENGTH_SHORT).show();
+            // context.startActivity(new Intent(context, NuevoJuego1Activity.class));
+            // dialog.dismiss();
         });
 
         // --- ESPACIO PARA EL NUEVO JUEGO 3 ---
         btnJuego3.setOnClickListener(v -> {
             Toast.makeText(context, "Creando el Juego 3...", Toast.LENGTH_SHORT).show();
+            // context.startActivity(new Intent(context, NuevoJuego1Activity.class));
+            // dialog.dismiss();
         });
 
         dialog.show();
