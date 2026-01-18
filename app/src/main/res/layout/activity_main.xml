@@ -144,8 +144,7 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/ic_leaf"
-                        />
+                        android:src="@drawable/ic_leaf"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -180,8 +179,7 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/ic_brain"
-                        />
+                        android:src="@drawable/ic_brain"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -191,6 +189,41 @@
                         android:textStyle="bold"
                         android:layout_marginTop="12dp"
                         android:textColor="@color/text_dark"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardBuscaminas"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:background="#FF9800"> <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎃"
+                    android:textSize="24sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Buscaminas"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/white"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
