@@ -126,13 +126,12 @@ public class MainActivity extends AppCompatActivity {
             tvBienvenida.setText("Hola " + gestorSesion.getUsuario());
             ivPerfilUsuario.setVisibility(View.VISIBLE);
             btnIniciarSesion.setText("Cerrar Sesión");
-            btnIniciarSesion.setBackgroundColor(android.graphics.Color.parseColor("#E57373")); // Rojo
         } else {
             // MODO: INVITADO
             tvBienvenida.setText("Hola Usuario");
             ivPerfilUsuario.setVisibility(View.GONE);
             btnIniciarSesion.setText("Iniciar Sesión");
-            btnIniciarSesion.setBackgroundColor(getResources().getColor(R.color.primary_blue)); // Azul
+
         }
     }
 

@@ -221,7 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="12dp"
-                android:backgroundTint="#247EA8"
+                android:backgroundTint="@color/arcade_blue"
                 android:letterSpacing="0.05"
                 android:text="Zona Arcade"
                 android:textColor="@color/white"
@@ -232,28 +232,26 @@
 
             <Button
                 android:id="@+id/btnIniciarSesion"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:layout_marginBottom="16dp"
                 android:text="Iniciar Sesión"
+                android:textColor="@color/primary_blue"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/primary_blue"
-                android:backgroundTint="@color/white"
+                app:cornerRadius="16dp"
                 app:strokeColor="@color/primary_blue"
                 app:strokeWidth="2dp"
-                app:cornerRadius="16dp"
-                app:elevation="0dp"
-                android:layout_marginBottom="16dp"/>
-
+                android:backgroundTint="@color/white" />
             <Button
                 android:id="@+id/btnExit"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Salir de la App"
                 android:textColor="@color/exit_red"
                 android:backgroundTint="@color/exit_bg"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                app:iconTint="@color/exit_red"
                 app:cornerRadius="12dp"/>
 
             <TextView
