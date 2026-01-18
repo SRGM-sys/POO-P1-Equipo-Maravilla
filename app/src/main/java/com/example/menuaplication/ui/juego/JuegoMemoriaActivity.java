@@ -69,8 +69,8 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
                 R.drawable.ic_odish,      // Imagen 4
                 R.drawable.ic_bicicleta,     // Imagen 5
                 R.drawable.ic_aguita,  // Imagen 6
-                R.drawable.ic_proyecto,  // Imagen 7
-                R.drawable.ic_tarea      // Imagen 8
+                R.drawable.ic_frutita,  // Imagen 7
+                R.drawable.ic_sakura      // Imagen 8
         };
 
         for (int img : imagenes) {
