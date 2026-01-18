@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/fondo_dialogo_redondo"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zona Arcade"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
+        android:layout_marginBottom="24dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="20dp">
+
+            <ImageButton
+                android:id="@+id/btnNuevoJuego1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_lumen"
+                android:background="@drawable/bg_boton_opcion"
+                android:backgroundTint="#4CAF50"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Juego 1"
+                app:tint="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Juego 1"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_secondary"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="20dp">
+
+            <ImageButton
+                android:id="@+id/btnNuevoJuego2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_lumen"
+                android:background="@drawable/bg_boton_opcion"
+                android:backgroundTint="#FF9800"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Juego 2"
+                app:tint="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Juego 2"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_secondary"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btnNuevoJuego3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_lumen"
+                android:background="@drawable/bg_boton_opcion"
+                android:backgroundTint="#2196F3"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Juego 3"
+                app:tint="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Juego 3"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_secondary"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
