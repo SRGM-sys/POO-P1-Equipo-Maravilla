@@ -48,6 +48,16 @@
             android:textColor="@color/text_dark"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/tv_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="🏆 Récord: --:--"
+            android:textStyle="bold"
+            android:textColor="@color/game_accent"
+            android:textSize="18sp"/>
+
         <Button
             android:id="@+id/btn_iniciar_juego"
             android:layout_width="match_parent"
