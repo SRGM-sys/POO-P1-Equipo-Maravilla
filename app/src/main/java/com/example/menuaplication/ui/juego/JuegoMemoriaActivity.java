@@ -14,63 +14,85 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Actividad principal que controla la lógica del juego de memoria.
+ * Gestiona el tablero, el emparejamiento de cartas, el conteo de intentos y el estado del juego.
+ *
+ * @author TheMatthias
+ */
 public class JuegoMemoriaActivity extends AppCompatActivity {
 
-    // Vistas del Layout
     private RecyclerView rvTablero;
-    private TextView tvPares;    // Referencia a tu tv_pares
-    private TextView tvIntentos; // Referencia a tu tv_intentos
-    private ImageButton btnVolver; // Referencia a tu btn_volver_menu
+    private TextView tvPares;
+    private TextView tvIntentos;
+    private ImageButton btnVolver;
 
-    // Variables lógicas
     private AdaptadorMemoria adaptador;
     private List<TarjetaMemoria> listaTarjetas;
     private int paresEncontrados = 0;
-    private int intentos = 0; // Contador de intentos
+    private int intentos = 0;
 
     private TarjetaMemoria primeraTarjetaSeleccionada = null;
     private boolean turnoBloqueado = false;
 
+
+    /**
+     * Método llamado al crear la actividad.
+     * Configura la interfaz, inicializa las vistas y arranca el juego.
+     *
+     * @param savedInstanceState Estado guardado de la actividad, si existe.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_juego_memoria); // Usa TU layout
+        setContentView(R.layout.activity_juego_memoria);
 
         inicializarVistas();
         configurarTablero();
         iniciarJuego();
     }
 
+
+    /**
+     * Inicializa los componentes de la interfaz de usuario vinculándolos con sus IDs en el layout XML.
+     * También configura el listener para el botón de retroceso.
+     */
     private void inicializarVistas() {
-        // Vinculamos con TUS IDs del XML
         rvTablero = findViewById(R.id.rv_tablero_memoria);
         tvPares = findViewById(R.id.tv_pares);
         tvIntentos = findViewById(R.id.tv_intentos);
         btnVolver = findViewById(R.id.btn_volver_menu);
 
-        // Configurar botón volver
-        btnVolver.setOnClickListener(v -> finish()); // Cierra la activity y vuelve al anterior
+        btnVolver.setOnClickListener(v -> finish());
     }
 
+
+    /**
+     * Configura el RecyclerView con un GridLayoutManager para mostrar las cartas en una cuadrícula de 4 columnas.
+     */
     private void configurarTablero() {
-        // Tu tablero 4x4
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         rvTablero.setLayoutManager(layoutManager);
     }
 
+
+    /**
+     * Inicia una nueva partida.
+     * Crea la lista de cartas duplicando las imágenes, las baraja aleatoriamente,
+     * configura el adaptador y reinicia los marcadores.
+     */
     private void iniciarJuego() {
         listaTarjetas = new ArrayList<>();
 
-        // Iconos
         int[] imagenes = {
-                R.drawable.ic_arbolito,     // Imagen 1
-                R.drawable.ic_molino,      // Imagen 2
-                R.drawable.ic_reciclaje,     // Imagen 3
-                R.drawable.ic_odish,      // Imagen 4
-                R.drawable.ic_bicicleta,     // Imagen 5
-                R.drawable.ic_aguita,  // Imagen 6
-                R.drawable.ic_proyecto,  // Imagen 7
-                R.drawable.ic_tarea      // Imagen 8
+                R.drawable.ic_arbolito,
+                R.drawable.ic_molino,
+                R.drawable.ic_reciclaje,
+                R.drawable.ic_odish,
+                R.drawable.ic_bicicleta,
+                R.drawable.ic_aguita,
+                R.drawable.ic_frutita,
+                R.drawable.ic_sakura
         };
 
         for (int img : imagenes) {
@@ -82,10 +104,17 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
         adaptador = new AdaptadorMemoria(listaTarjetas, this::manejarClickTarjeta);
         rvTablero.setAdapter(adaptador);
 
-        // Resetear textos
         actualizarMarcadores();
     }
 
+
+    /**
+     * Maneja el evento de clic en una carta.
+     * Controla la lógica de voltear cartas, bloquear el turno temporalmente y verificar coincidencias.
+     *
+     * @param tarjeta  La carta seleccionada.
+     * @param posicion La posición de la carta en el adaptador.
+     */
     private void manejarClickTarjeta(TarjetaMemoria tarjeta, int posicion) {
         if (turnoBloqueado || tarjeta.isEncontrada() || tarjeta.isVolteada()) return;
 
@@ -96,13 +125,21 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
             primeraTarjetaSeleccionada = tarjeta;
         } else {
             turnoBloqueado = true;
-            intentos++; // Aumentamos intentos al seleccionar la segunda carta
+            intentos++;
             actualizarMarcadores();
             verificarCoincidencia(primeraTarjetaSeleccionada, tarjeta);
             primeraTarjetaSeleccionada = null;
         }
     }
 
+
+    /**
+     * Verifica si dos cartas seleccionadas son idénticas.
+     * Si coinciden, las marca como encontradas. Si no, las voltea nuevamente después de un retraso.
+     *
+     * @param t1 La primera carta seleccionada.
+     * @param t2 La segunda carta seleccionada.
+     */
     private void verificarCoincidencia(TarjetaMemoria t1, TarjetaMemoria t2) {
         if (t1.getImagenResId() == t2.getImagenResId()) {
             t1.setEncontrada(true);
@@ -124,6 +161,10 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Actualiza los TextViews de la interfaz con el número actual de pares encontrados e intentos realizados.
+     */
     private void actualizarMarcadores() {
         // Actualizamos los textos de tu layout
         tvPares.setText("Pares: " + paresEncontrados + "/8");

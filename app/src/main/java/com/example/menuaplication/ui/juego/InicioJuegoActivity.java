@@ -7,8 +7,20 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.menuaplication.R;
 
+/**
+ * Actividad que representa la pantalla de inicio o bienvenida al juego de memoria.
+ * Proporciona la interfaz para que el usuario comience una nueva partida o regrese al menú anterior.
+ *
+ * @author TheMatthias
+ */
 public class InicioJuegoActivity extends AppCompatActivity {
 
+    /**
+     * Inicializa la actividad, establece el diseño y configura los listeners de los botones.
+     * Gestiona la navegación hacia la actividad principal del juego o el cierre de la pantalla actual.
+     *
+     * @param savedInstanceState Estado previamente guardado de la actividad, si existe.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,11 +32,10 @@ public class InicioJuegoActivity extends AppCompatActivity {
         btnIniciar.setOnClickListener( v -> {
             Intent intent = new Intent(InicioJuegoActivity.this, JuegoMemoriaActivity.class);
                 startActivity(intent);
-                // No ponemos finish() aquí si queremos que al volver atrás regrese a esta pantalla
         });
 
         btnVolver.setOnClickListener(v -> {
-            finish(); // Simplemente cierra esta actividad para volver a la anterior
+            finish();
         });
     }
 }
