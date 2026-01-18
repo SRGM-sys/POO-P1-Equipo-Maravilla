@@ -26,7 +26,7 @@ import java.util.List;
  * Implementa el patrón de diseño Singleton para garantizar que exista una única
  * fuente de verdad para la lista de actividades en toda la aplicación.
  *
- * <p>Esta clase maneja:</p>
+ * Esta clase maneja:</p>
  * <ul>
  * <li>El almacenamiento local mediante serialización de objetos (archivo .ser).</li>
  * <li>Operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en memoria y disco.</li>
