@@ -135,10 +135,10 @@
         </androidx.cardview.widget.CardView>
 
         <Button
-            android:id="@+id/btn_volver_inicio"
+            android:id="@+id/btn_registrar_hoy"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:text="VOLVER AL INICIO"
+            android:text="REGISTRAR ACCIONES DEL DÍA"
             android:textSize="16sp"
             android:textStyle="bold"
             android:backgroundTint="@color/primary_green"

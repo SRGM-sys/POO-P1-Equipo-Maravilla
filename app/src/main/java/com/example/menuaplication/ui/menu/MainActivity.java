@@ -15,6 +15,7 @@ import com.example.menuaplication.ui.juego.InicioJuegoActivity;
 import com.google.android.material.button.MaterialButton;
 import com.example.menuaplication.ui.sostenibilidad.RegistroSostenibilidadActivity;
 import com.example.menuaplication.ui.juego.JuegoMemoriaActivity;
+import com.example.menuaplication.ui.sostenibilidad.ResumenSostenibilidadActivity;
 
 /**
  * Actividad principal que sirve como menú de navegación central de la aplicación.
@@ -124,8 +125,7 @@ public class MainActivity extends AppCompatActivity {
         // --- PARTE ECO ---
         if (cardEco != null) {
             cardEco.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, RegistroSostenibilidadActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, ResumenSostenibilidadActivity.class));
             });
         }
 
