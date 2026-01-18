@@ -212,53 +212,59 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:orientation="vertical"
-            android:paddingHorizontal="10dp">
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="16dp">
 
             <Button
                 android:id="@+id/btnMenuJuegos"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:backgroundTint="#FF9800"
-                android:fontFamily="monospace"
-                android:text="Juegos"
+                android:layout_height="60dp"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="#247EA8"
+                android:letterSpacing="0.05"
+                android:text="Zona Arcade"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="16dp"
+                app:elevation="4dp" />
 
             <Button
                 android:id="@+id/btnIniciarSesion"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:backgroundTint="@color/primary_blue"
-                android:fontFamily="monospace"
-                android:text="Iniciar Sesion"
-                android:textSize="16sp"
-                app:cornerRadius="12dp" />
+                android:layout_height="55dp"
+                android:text="Iniciar Sesión"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                android:backgroundTint="@color/white"
+                app:strokeColor="@color/primary_blue"
+                app:strokeWidth="2dp"
+                app:cornerRadius="16dp"
+                app:elevation="0dp"
+                android:layout_marginBottom="16dp"/>
 
             <Button
                 android:id="@+id/btnExit"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#FFEBEE"
-                android:fontFamily="monospace"
                 android:text="Salir de la App"
                 android:textColor="@color/exit_red"
-                android:textSize="16sp"
-                app:iconTint="@color/exit_red" />
+                android:backgroundTint="@color/exit_bg"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:iconTint="@color/exit_red"
+                app:cornerRadius="12dp"/>
 
             <TextView
                 android:id="@+id/btnCreditos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
                 android:text="Ver Créditos"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_secondary"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -22,5 +22,14 @@
     <color name="halloween_purple">#673AB7</color>
     <color name="halloween_dark">#1A1A1A</color>
     <color name="halloween_cell">#2C2C2C</color>
+
+
+    <color name="primary_dark_gradient">#1565C0</color>
+    <color name="game_indigo">#3949AB</color>
+    <color name="eco_teal">#00897B</color>
+    <color name="text_dark">#263238</color>
+    <color name="text_secondary">#78909C</color>
+    <color name="button_surface_color">#FFFFFF</color>
+    <color name="exit_bg">#FFEBEE</color>
 </resources>
 
