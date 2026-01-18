@@ -15,55 +15,52 @@ import com.example.menuaplication.ui.sostenibilidad.ResumenSostenibilidadActivit
 
 /**
  * Actividad encargada de gestionar el registro diario de acciones sostenibles del usuario.
- * Permite al usuario marcar diversas actividades ecológicas realizadas (transporte,
- * reciclaje, etc.) y calcula la puntuación obtenida en el día. Sirve como punto de
- * entrada para la recolección de datos del módulo de sostenibilidad.
+ * Permite al usuario interactuar con una serie de opciones (CheckBoxes) que representan
+ * hábitos ecológicos. La clase procesa estas entradas, genera un objeto de modelo
+ * {@link RegistroSostenibilidad} y calcula la recompensa diaria en Eco-Puntos.
  *
  * @author erwxn
  * @version 1.0
  */
 public class RegistroSostenibilidadActivity extends AppCompatActivity {
 
-    /** Checkbox para registrar si se usó transporte sostenible. */
-    private CheckBox cbTransporte;
-    /** Checkbox para registrar si se evitaron impresiones innecesarias. */
-    private CheckBox cbImpresiones;
-    /** Checkbox para registrar si se evitó el uso de envases descartables. */
-    private CheckBox cbEnvases;
-    /** Checkbox para registrar si se realizó separación de residuos. */
-    private CheckBox cbReciclaje;
-    /** TextView para mostrar la fecha actual del registro. */
+    /** Componentes de selección para las categorías de sostenibilidad. */
+    private CheckBox cbTransporte, cbImpresiones, cbEnvases, cbReciclaje;
+
+    /** Etiqueta informativa para mostrar la fecha actual del sistema. */
     private TextView tvFecha;
-    /** Botón para procesar y "guardar" las acciones seleccionadas. */
-    private Button btnGuardar;
-    /** Botón para navegar hacia la pantalla de resumen. */
-    private Button btnVerResumen;
-    /** Botón de imagen para regresar a la pantalla anterior. */
+
+    /** Botones de acción para procesar el registro y navegar al resumen. */
+    private Button btnGuardar, btnVerResumen;
+
+    /** Botón de navegación tipo imagen para cerrar la actividad actual. */
     private ImageButton btnVolver;
 
     /**
-     * Inicializa la actividad, infla el diseño XML y prepara los componentes
-     * básicos de la interfaz.
-     * * @param savedInstanceState Estado previo de la instancia, si existe.
+     * Ciclo de vida: Método de creación de la actividad.
+     * Establece el contenido visual, vincula los componentes mediante ID y
+     * activa los escuchadores de eventos.
+     *
+     * @param savedInstanceState Contenedor de datos de estado previo.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro_sostenibilidad);
 
-        // Vinculación de componentes visuales
+        // Vinculación de componentes visuales con el archivo XML
         inicializarVistas();
 
-        // Establece la fecha automática del sistema en el formato estándar
+        // Establece la fecha automática del sistema en el encabezado de la pantalla
         tvFecha.setText("Fecha: " + LocalDate.now().toString());
 
-        // Configuración de la lógica de interacción
+        // Configuración de la lógica de respuesta a clics
         configurarListeners();
     }
 
     /**
-     * Realiza el enlace (binding) entre las variables de la clase y los componentes
-     * definidos en el archivo de diseño XML (layout).
+     * Centraliza la obtención de referencias de los elementos visuales del Layout.
+     * Este método mejora la organización del código al separar el inflado de la lógica.
      */
     private void inicializarVistas() {
         cbTransporte = findViewById(R.id.cb_transporte);
@@ -77,17 +74,20 @@ public class RegistroSostenibilidadActivity extends AppCompatActivity {
     }
 
     /**
-     * Configura los escuchadores de eventos (listeners) para todos los elementos
-     * interactivos de la pantalla.
+     * Define el comportamiento interactivo de la interfaz.
+     * Incluye la lógica para el cierre de pantalla, el procesamiento de datos
+     * y la transición hacia la pantalla de resumen semanal.
      */
     private void configurarListeners() {
-        // Cierra la actividad actual para volver atrás
+        // Finaliza la actividad actual para retornar al nivel anterior en la pila
         btnVolver.setOnClickListener(v -> finish());
 
         /**
          * Lógica del botón Guardar:
-         * Crea un objeto de modelo, transfiere el estado de los CheckBoxes y
-         * muestra la puntuación calculada mediante un Toast.
+         * 1. Instancia un nuevo RegistroSostenibilidad con la fecha de hoy.
+         * 2. Mapea el estado de cada CheckBox (boolean) a los atributos del objeto.
+         * 3. Invoca la lógica de negocio del modelo para calcular los puntos.
+         * 4. Notifica al usuario el resultado mediante un Toast interactivo.
          */
         btnGuardar.setOnClickListener(v -> {
             RegistroSostenibilidad registro = new RegistroSostenibilidad(LocalDate.now());
@@ -96,14 +96,16 @@ public class RegistroSostenibilidadActivity extends AppCompatActivity {
             registro.setEvitoEnvasesDescartables(cbEnvases.isChecked());
             registro.setSeparoResiduos(cbReciclaje.isChecked());
 
-            // Obtención de puntos calculados por la lógica de negocio en el modelo
+            // Obtención de puntos calculados dinámicamente según las selecciones del usuario
             int puntos = registro.getPuntosDia();
             Toast.makeText(this, "¡Genial! Has ganado " + puntos + " Eco-Puntos hoy.", Toast.LENGTH_LONG).show();
-
-
         });
 
-        // Navegación hacia la actividad de Resumen
+        /**
+         * Lógica del botón Ver Resumen:
+         * Inicia una transición explícita hacia {@link ResumenSostenibilidadActivity}
+         * para visualizar las estadísticas acumuladas.
+         */
         btnVerResumen.setOnClickListener(v -> {
             startActivity(new Intent(this, ResumenSostenibilidadActivity.class));
         });

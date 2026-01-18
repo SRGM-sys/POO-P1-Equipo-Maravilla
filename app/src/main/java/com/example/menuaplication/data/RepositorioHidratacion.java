@@ -27,7 +27,6 @@ import java.util.Map;
  * @version 1.0
  */
 public class RepositorioHidratacion {
-
     /** Instancia única de la clase (Singleton). */
     private static RepositorioHidratacion instance;
 
