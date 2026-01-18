@@ -74,7 +74,7 @@ public class DialogoLogin {
             }
 
             // --- AQUÍ VALIDAMOS LA CONTRASEÑA ---
-            if (password.equals("Lumen")) {
+            if (password.equals("Maravilla67")) {
                 // 1. Guardar sesión
                 new GestorSesion(context).guardarUsuario(usuario);
 
