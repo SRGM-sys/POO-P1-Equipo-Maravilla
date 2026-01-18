@@ -88,6 +88,7 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
         tvIntentos = findViewById(R.id.tv_intentos);
         btnVolver = findViewById(R.id.btn_volver_menu);
 
+        tvCronometro = findViewById(R.id.tv_cronometro);
         btnVolver.setOnClickListener(v -> finish());
     }
 
