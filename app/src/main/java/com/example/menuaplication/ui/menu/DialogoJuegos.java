@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Toast;
 import com.example.menuaplication.R;
+import com.example.menuaplication.ui.buscaminas.BuscaminasActivity;
 import com.example.menuaplication.ui.puzzle.PuzzleDeslizanteActivity;
 
 public class DialogoJuegos {
@@ -24,19 +25,21 @@ public class DialogoJuegos {
 
         // --- JUEGO 1 ---
         btnJuego1.setOnClickListener(v -> {
-            Toast.makeText(context, "Creando el Juego 1...", Toast.LENGTH_SHORT).show();
-        });
-
-        // --- JUEGO 2: PUZZLE DESLIZANTE ---
-        btnJuego2.setOnClickListener(v -> {
-            Intent intent = new Intent(context, PuzzleDeslizanteActivity.class);
+            Intent intent = new Intent(context, BuscaminasActivity.class);
             context.startActivity(intent);
             dialog.dismiss();
         });
 
+        // --- JUEGO 2: PUZZLE DESLIZANTE ---
+        btnJuego2.setOnClickListener(v -> {
+
+        });
+
         // --- JUEGO 3 ---
         btnJuego3.setOnClickListener(v -> {
-            Toast.makeText(context, "Creando el Juego 3...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, PuzzleDeslizanteActivity.class);
+            context.startActivity(intent);
+            dialog.dismiss();
         });
 
         dialog.show();
