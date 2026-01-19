@@ -43,3 +43,33 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 }
 
+// Tarea para generar Javadoc (Corregida para Kotlin DSL)
+tasks.register<Javadoc>("generarJavadoc") {
+    // CORRECCIÓN: Usamos paréntesis () en lugar de =
+    source(android.sourceSets.getByName("main").java.srcDirs)
+
+    // Configuración del Classpath para encontrar las clases de Android
+    classpath = files(android.bootClasspath)
+
+    // Agregar las librerías externas del proyecto para que no falten referencias
+    android.applicationVariants.all {
+        if (name == "release") {
+            classpath += javaCompileProvider.get().classpath
+        }
+    }
+
+    // Configuración visual y de idioma
+    options {
+        this as StandardJavadocDocletOptions
+        encoding = "UTF-8"
+        docEncoding = "UTF-8"
+        charSet = "UTF-8"
+        links("https://docs.oracle.com/javase/8/docs/api/")
+        links("https://d.android.com/reference/")
+        addStringOption("Xdoclint:none", "-quiet")
+    }
+
+    isFailOnError = false
+}
+
+

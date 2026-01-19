@@ -151,7 +151,7 @@ public abstract class Actividad implements Serializable {
      * Actualiza el porcentaje de avance y modifica automáticamente el estado de la actividad.
      * <ul>
      * <li>Si es >= 100: Estado COMPLETADA.</li>
-     * <li>Si es > 0 y < 100: Estado EN_PROGRESO.</li>
+     * <li>Si es mayor a 0 y menor a 100: Estado EN_PROGRESO.</li>
      * <li>Si es 0: Estado PENDIENTE.</li>
      * </ul>
      *
